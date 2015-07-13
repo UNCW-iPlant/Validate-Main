@@ -39,6 +39,13 @@ def usage():
 """Below is the list of "models" to be used in the simulation of a quantitative trait"""
 
 # The additive model assumes a linear and consistent increase for the presence of each allele
+''' <REVIEW PLAWSON>
+
+Can we integrate more models here for simulate? Or possibly integrate multiple population
+simulators beyond SimuPop and generate a front-end for users select from based on similarity 
+to their own dataset? 
+
+<END REVIEW>'''
 def additive_model(geno):
 	my_sum = 0
 	my_total_sum = 0
@@ -57,7 +64,13 @@ def additive_model(geno):
 
 # The main function: executes the obtaining of command-line flags and then executes the simuPOP simulation.
 def main():
+	''' <REVIEW PLAWSON>
 
+	Error handling here is not very elegant or informative, should print a more useful prompt to user
+	and not just the error generated for incorrect/missing arguments. Consider using https://docs.python.org/2.7/library/argparse.html,
+	an argument parser with built-in exception handling and help features.
+
+	<END REVIEW>'''
 	# Check for arguments passed
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], shortopts="vhd:p1:p2:s:n:l:e:f:i:m:g:r:", longopts=["verbose", "help", "distribution=", "parameter1=", "parameter2=", "size=", 
@@ -67,7 +80,7 @@ def main():
 		print(err)
 		usage()
 		sys.exit()
-
+	'''<REVIEW PLAWSON> These defaults need to be communicated to the user, either at runtime or in the documentation.'''
 	verbose = False
 	filename = "my"
 	size = 1000
