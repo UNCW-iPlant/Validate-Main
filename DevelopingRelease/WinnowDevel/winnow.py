@@ -16,6 +16,9 @@ values are passed back to the caller only if return is explicitly implemented. R
 as a means of documenting what a function does even if it does not return anything, this should instead 
 be accomplished in the main description for the given function.
 
+According to the Zen of Python "Flat is better than nested"... some of the functions called by Winnow exist only to call 
+other functions, this is an unnecessary level of nesting and should be eliminated when possible to increase 
+clarity and readability of code. 
 <END REVIEW>'''
 
 class Winnow:
@@ -39,12 +42,12 @@ class Winnow:
             self.load_ote()
         else:
             print 'Currently only OTE is supported'
-''' <REVIEW PLAWSON>
+		''' <REVIEW PLAWSON>
 
-This fails to terminate the program if the wrong truth file type is provided, resulting in a failed execution. Add a sys.exit(),
-and until more known truth formats are supported consider setting kt_type to OTE as default without prompting the user. 
+		This fails to terminate the program if the wrong truth file type is provided, resulting in a failed execution. Add a sys.exit(),
+		and until more known truth formats are supported consider setting kt_type to OTE as default without prompting the user. 
 
-<END REVIEW>'''
+		<END REVIEW>'''
 
     def load_ote(self):
         """

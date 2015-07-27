@@ -16,6 +16,11 @@ def gwasWithBeta(betaColumn, betaTrueFalse, snpTrueFalse, scoreColumn, threshold
     :param threshold: significant threshold
     :return: an array of functions and an array of those functions' results
     """
+''' <REVIEW PLAWSON>
+
+Wouldn't it make more sense to return the functions and results as a dictionary with the function name as the key?
+
+<END REVIEW>'''
     return ["rmse", "mae", "r", "r2", "auc", "TruePositives", "FalsePositives", "TrueNegatives", "FalseNegatives",
             "TruePosRate", "FalsePosRate", "error", "sens", "spec", "precision", "youden"], \
            [rmse(betaColumn, betaTrueFalse), mae(betaColumn, betaTrueFalse), r(betaColumn, betaTrueFalse),
@@ -39,6 +44,11 @@ def gwasWithoutBeta(snpTrueFalse, scoreColumn, threshold):
     :param threshold: significant threshold
     :return: an array of functions and an array of those functions' results
     """
+''' <REVIEW PLAWSON>
+
+Wouldn't it make more sense to return the functions and results as a dictionary with the function name as the key?
+
+<END REVIEW>'''
     return ["auc", "TruePositives", "FalsePositives", "TrueNegatives", "FalseNegatives", "TruePosRate", "FalsePosRate",
             "error", "sens", "spec", "precision", "youden"], [auc(snpTrueFalse, scoreColumn),
                                                               tp(snpTrueFalse, threshold, scoreColumn),

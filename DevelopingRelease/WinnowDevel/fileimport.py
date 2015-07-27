@@ -5,7 +5,12 @@ Functions to import both class and results folder files
 import os
 import data
 import csv
+''' <REVIEW PLAWSON>
 
+Some of these functions (such as getList) are unnecessary and only add complexity. 
+Rather than call getList() simply call os.listdir()
+
+<END REVIEW>'''
 
 def getList(folder):
 	"""

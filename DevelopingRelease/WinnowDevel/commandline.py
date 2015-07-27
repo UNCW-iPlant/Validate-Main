@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """ 
-Functions for indentifying and using the command-line to execute Winnow for Python
+Functions for identifying and using the command-line to execute Winnow for Python
 """
+		''' <REVIEW PLAWSON>
 
+		commandline.py is not consistent with the commenting style used in the rest of Winnow and its associated modules.
+
+		<END REVIEW>'''
 
 # Dependencies
 import getopt
