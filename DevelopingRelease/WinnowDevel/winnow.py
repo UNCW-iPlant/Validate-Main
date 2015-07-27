@@ -9,6 +9,14 @@ from fileimport import getList, loadKT, loadFile, trueFalse, writeCSV
 from checkhidden import checkList
 from gwas import gwasWithBeta, gwasWithoutBeta
 
+''' <REVIEW PLAWSON>
+
+The comments for the functions within winnow.py indicate that many return some value, but in truth 
+values are passed back to the caller only if return is explicitly implemented. Return should not be used
+as a means of documenting what a function does even if it does not return anything, this should instead 
+be accomplished in the main description for the given function.
+
+<END REVIEW>'''
 
 class Winnow:
     def __init__(self, args):
@@ -31,6 +39,12 @@ class Winnow:
             self.load_ote()
         else:
             print 'Currently only OTE is supported'
+''' <REVIEW PLAWSON>
+
+This fails to terminate the program if the wrong truth file type is provided, resulting in a failed execution. Add a sys.exit(),
+and until more known truth formats are supported consider setting kt_type to OTE as default without prompting the user. 
+
+<END REVIEW>'''
 
     def load_ote(self):
         """

@@ -19,7 +19,11 @@ def initializeGraphics():
 	print "###      Contact: (770) 289-8830 -- dustin.landers@gmail.com   ####"
 	print "###                                                            ####"
 	print "###################################################################"
+''' <REVIEW PLAWSON>
 
+More of an aesthetic point but command line arguments should be consistent in capitalization.
+
+<END REVIEW>'''
 
 def usage():
 	"""Prints all possible command-line arguments to the screen; also ends the execution of the software"""

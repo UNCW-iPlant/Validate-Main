@@ -50,6 +50,12 @@ def trueFalse(currentSnp, ktSnps):
 		return True
 	else:
 		return False
+            print 'Currently only OTE is supported'
+''' <REVIEW PLAWSON>
+
+Perhaps write the csv out as a .csv extension rather than a .txt, definitely not necessary though.
+<END REVIEW>'''
+
 
 def writeCSV(filename, keepToWrite, method="wb", exportDelimiter=","):
 	"""

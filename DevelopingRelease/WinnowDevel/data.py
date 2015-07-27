@@ -27,6 +27,12 @@ class Data:
                 self.data, self.n = self.comma()
             elif self.seper == "tab":
                 self.data, self.n = self.tab()
+''' <REVIEW PLAWSON>
+
+It's probably not necessary to break the parser into three separate functions, rather it would be trivial to pass the appropriate delimiter to the string
+split inside a single function. This isn't necessary, just a means to shorten up the code a bit. 
+
+<END REVIEW>'''
 
     # The following two functions establish the possible options for delimiters: whitespace, comma, or tab
     def whitespace(self):
