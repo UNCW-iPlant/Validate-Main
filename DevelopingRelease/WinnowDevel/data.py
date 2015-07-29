@@ -17,7 +17,7 @@ class Data:
 
     def split_data(self):
         """
-        Produces a dictionary with data that used whitespace as a delimiter
+        Produces a dictionary with data split by the given delimiter
 
         :return: a dictionary with the parsed data and the amount of data
         """
