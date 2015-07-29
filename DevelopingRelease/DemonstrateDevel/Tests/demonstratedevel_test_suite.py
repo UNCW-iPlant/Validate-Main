@@ -1,5 +1,6 @@
 import ListRanker_unittest as lr
 import MPlot_unittest as mplot
+import Demonstrate_unittest as dem
 import unittest
 
 
@@ -8,6 +9,7 @@ def main():
 
     test_suite.addTests(lr.get_test_suite())
     test_suite.addTests(mplot.get_test_suite())
+    test_suite.addTests(dem.get_test_suite())
 
     unittest.TextTestRunner(verbosity=2).run(test_suite)
 
