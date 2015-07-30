@@ -1,44 +1,8 @@
 """
-Functions to import both class and results folder files
+Functions to handle importing class and results files as well as exporting output
 """
 
-import os
-import data
 import csv
-
-
-def getList(folder):
-    """
-    Returns the complete location of the folder with the aggregated outputs
-
-    :param folder: folder to get the location of
-    :return: the complete folder location
-    """
-    return os.listdir(folder)
-
-
-def loadFile(folder, thisFile, seper):
-    """
-    Reads each GWAS output from a folder
-
-    :param folder: folder to load GWAS from
-    :param thisFile: file to read
-    :param seper: how the data is separated
-    :return: the GWAS data of the file
-    """
-    return data.Data(folder + "/" + thisFile, seper, skiprow=False)
-
-
-def loadKT(thisFile, seper):
-    """
-    Reads the SNPs and effect sizes from the known-truth file
-
-    :param thisFile: file to read
-    :param seper: how the data is separated
-    :return: the known-truth data of the file
-    """
-    return data.Data(thisFile, seper, skiprow=True)
-
 
 def trueFalse(currentSnp, ktSnps):
     """

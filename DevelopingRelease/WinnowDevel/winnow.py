@@ -5,10 +5,12 @@
 
 """ Dependencies """
 from commandline import initializeGraphics, checkArgs
-from fileimport import getList, loadKT, loadFile, trueFalse, writeCSV, writeSettings
+from fileimport import trueFalse, writeCSV, writeSettings
 from checkhidden import checkList
 from gwas import gwasWithBeta, gwasWithoutBeta
 from adjustments import fdr_bh
+import os
+import data
 
 
 class Winnow:
@@ -40,9 +42,10 @@ class Winnow:
         :return: sets the instance list variables snp_true_false and beta_true_false with data from the known truth file
         given at runtime, separated by the given delimiter
         """
-        app_output_list = checkList(getList(self.args_dict['folder']))
-        kt_file = loadKT(self.args_dict['truth'], self.args_dict['kt_type_separ'])
-        acquired_data = loadFile(self.args_dict['folder'], app_output_list[0], self.args_dict['separ'])
+        app_output_list = checkList(os.listdir(self.args_dict['folder']))
+        kt_file = data.Data(self.args_dict['truth'], self.args_dict['kt_type_separ'], skiprow=True)
+        acquired_data = data.Data(self.args_dict['folder'] + '/' + app_output_list[0], self.args_dict['separ'],
+                                  skiprow=False)
         snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
         kt_snps = data_to_list(kt_file, 1, 0)
         kt_betas = data_to_list(kt_file, 1, 1)
@@ -79,7 +82,7 @@ class Winnow:
         :param data_file: file containing score and, if selected, beta values
         :return: a list of scores and, if selected, a list of betas in the form of a tuple
         """
-        acquired_data = loadFile(self.args_dict['folder'], data_file, self.args_dict['separ'])
+        acquired_data = data.Data(self.args_dict['folder'] + '/' + data_file, self.args_dict['separ'], skiprow=False)
         score_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['score']), True)
         snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
         adjusted_score_column = self.adjust_score(score_column)
@@ -98,7 +101,7 @@ class Winnow:
         :return: loads all files from the folder given at runtime, parses data with the load_data function, returns the
         results of the analysis with this data
         """
-        app_output_list = sorted(checkList(getList(self.args_dict['folder'])))
+        app_output_list = sorted(checkList(os.listdir(self.args_dict['folder'])))
         for each in app_output_list:
             if self.args_dict['beta'] is not None:
                 score_column, beta_column = self.load_data(each)
