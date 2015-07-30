@@ -19,7 +19,6 @@ class Winnow:
         Creates a new instance of a Winnow object using the runtime arguments.
 
         :param args: dictionary of arguments
-        :return: a new Winnow object with snp_true_false and beta_true_false initialized as empty lists
         """
         self.args_dict = args
         self.snp_true_false = list()
@@ -39,8 +38,8 @@ class Winnow:
         """
         Loads only truth and effect type known truth file.
 
-        :return: sets the instance list variables snp_true_false and beta_true_false with data from the known truth file
-        given at runtime, separated by the given delimiter
+        Sets the instance list variable snp_tru_false and
+        beta_true_false with data from the known truth file given at runtime, separated by the given delimiter
         """
         app_output_list = checkList(os.listdir(self.args_dict['folder']))
         kt_file = data.Data(self.args_dict['truth'], self.args_dict['kt_type_separ'], skiprow=True)
@@ -56,12 +55,11 @@ class Winnow:
     def load_ote_betas(self, snp_col, kt_snp, kt_beta):
         """
         Loads beta values as floats from the only truth and effect type known truth file if the beta argument is passed
-        at runtime.
+        at runtime. Stores the float representation of betas in the instance variable beta_true_false.
 
         :param snp_col: the column number that the SNPs are listed in
         :param kt_snp: list of known truth SNPs
         :param kt_beta: list of known truth betas
-        :return: Stores the float representation of betas in the instance variable beta_true_false
         """
         if self.args_dict['beta'] is not None:
             count = 0
@@ -98,7 +96,7 @@ class Winnow:
         Generator that performs the analysis. Uses data from the files within the folder that was given at runtime.
         Currently, only GWAS is supported.
 
-        :return: loads all files from the folder given at runtime, parses data with the load_data function, returns the
+        Loads all files from the folder given at runtime, parses data with the load_data function, returns the
         results of the analysis with this data
         """
         app_output_list = sorted(checkList(os.listdir(self.args_dict['folder'])))
@@ -119,7 +117,6 @@ class Winnow:
         Writes the results of the analysis to the file given at runtime. Gets the resulting data from a generator.
 
         :param gen: generator that yields data to be written
-        :return: writes the data to the given file
         """
         first_for_header = True
         for each in gen:
@@ -143,7 +140,8 @@ class Winnow:
         if self.args_dict['beta'] is None:
             return gwasWithoutBeta(data_file, self.snp_true_false, score_column, threshold)
         else:
-            return gwasWithBeta(data_file, beta_column, self.beta_true_false, self.snp_true_false, score_column, threshold)
+            return gwasWithBeta(data_file, beta_column, self.beta_true_false,
+                                self.snp_true_false, score_column, threshold)
 
     def adjust_score(self, score):
         """
@@ -159,7 +157,6 @@ class Winnow:
         # Add other adjustments here
         else:
             return score
-        pass
 
     def save_snp_score(self, snp, score, adjusted):
         """
@@ -168,7 +165,6 @@ class Winnow:
         :param data: the data file
         :param score: the list of p-values
         :param adjusted: the list of adjusted p-values
-        :return: saves a text file in the format file, p-value, adjusted p-value if adjustments has been selected
         """
         if self.args_dict['savep']:
             try:
@@ -193,7 +189,6 @@ class Winnow:
         """
         Saves the parameters: Output file, analysis type, Known truth type, and threshold to a text file
 
-        :return: saved settings file
         """
         writeSettings(self.args_dict)
 
@@ -202,7 +197,6 @@ def initialize():
     """
     Displays graphics from commandline.py and loads runtime parameters, from a tuple, as a dictionary.
 
-    :return: a dictionary of the runtime parameters
     """
     initializeGraphics()
     folder, analysis, truth, snp, score, beta, filename, threshold, separ, kt_type, \
