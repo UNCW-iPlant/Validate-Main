@@ -4,7 +4,7 @@ import sys
 
 sys.path.append(os.getcwd()[:os.getcwd().index('DevelopingRelease')])
 from DevelopingRelease.WinnowDevel import winnow
-from DevelopingRelease.WinnowDevel.fileimport import loadKT
+from DevelopingRelease.WinnowDevel import data
 
 
 class WinnowTest(unittest.TestCase):
@@ -64,7 +64,7 @@ class WinnowTest(unittest.TestCase):
                           0.41666667, 0.58333333, 0.66666667, 0.5, 0.57142857, 0.42857143, 0.16666667])
 
     def test_data_to_list(self):
-        kt_file = loadKT(self.args['truth'], self.args['kt_type_separ'])
+        kt_file = data.Data(self.args['truth'], self.args['kt_type_separ'], skiprow=True)
         self.assertEqual(winnow.data_to_list(kt_file, 1, 0),
                          ['gpm705a', 'tub1', 'gpm113b', 'gpm325a', 'dmt103b', 'gpm699d', 'gpm27', 'gpm319', 'bnl5.62a',
                           'fus6', 'mmp102', 'IDP1447', 'AY110314', 'IDP1464', 'gpm331', 'umc94a', 'lim179', 'AY107629',
