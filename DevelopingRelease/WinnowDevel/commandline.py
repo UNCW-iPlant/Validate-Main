@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ 
-Functions for indentifying and using the command-line to execute Winnow for Python
+Functions for identifying and using the command-line to execute Winnow for Python
 """
 
 
