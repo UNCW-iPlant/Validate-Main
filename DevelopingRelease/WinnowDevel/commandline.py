@@ -51,7 +51,7 @@ def checkArgs():
                         help="The type of analysis for Winnow to perform (currently, only GWAS is supported)",
                         default="GWAS", type=str, choices=["GWAS"])
     parser.add_argument("-F", "--folder", required=True, type=str, help="The input folder of box results")
-    parser.add_argument("-C", "--class", required=True, type=str, help="The known-truth file for used simulation")
+    parser.add_argument("-C", "--ktclass", required=True, type=str, help="The known-truth file for used simulation")
     parser.add_argument("-S", "--snp", required=True, type=str, help="The name of the SNP column in results file")
     parser.add_argument("-P", "--score", required=True, type=str,
                         help="The name of the scoring column in results file (e.g. p-value)")
@@ -76,11 +76,11 @@ def checkArgs():
 
     """Change command line arguments into variables to pass along to the rest of the program"""
     verbose = args.verbose
-    folder = args.Folder
+    folder = args.folder
     analysis = args.analysis
-    truth = args.Class
-    snp = args.Snp
-    score = args.Score
+    truth = args.ktclass
+    snp = args.snp
+    score = args.score
     beta = args.beta
     filename = args.filename
     threshold = args.threshold
