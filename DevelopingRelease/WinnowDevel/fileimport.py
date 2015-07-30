@@ -88,7 +88,6 @@ def writeSettings(winnowargs):
         a += 'WithoutBeta'
     with open(winnowargs['filename'] + "_parameters.txt", 'wb') as openFile:
         openFileWriter = csv.writer(openFile, delimiter='\t')
-        openFileWriter.writerow(('Output File: ', winnowargs['filename']))
         openFileWriter.writerow(('Analysis Type: ', a))
         openFileWriter.writerow(('KT Type: ', winnowargs['kt_type']))
         openFileWriter.writerow(('Threshold: ', winnowargs['threshold']))

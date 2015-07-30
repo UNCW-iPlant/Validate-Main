@@ -106,7 +106,7 @@ class Winnow:
                 score_column = self.load_data(each)
                 beta_column = None
             if self.args_dict['analysis'] == 'GWAS':
-                yield self.do_gwas(score_column, beta_column)
+                yield self.do_gwas(each, score_column, beta_column)
             else:
                 # Add other analysis methods here
                 print 'Currently, only GWAS is supported.'
@@ -127,7 +127,7 @@ class Winnow:
                 first_for_header = False
         gen.close()
 
-    def do_gwas(self, score_column, beta_column):
+    def do_gwas(self, data_file, score_column, beta_column):
         """
         Returns the results of the GWAS analysis, with or without beta, using the instance variables snp_true_false and
         beta_true_false and the lists, from the parameters, the lists of scores and, if applicable, the list of betas.
@@ -138,9 +138,9 @@ class Winnow:
         """
         threshold = self.args_dict['threshold']
         if self.args_dict['beta'] is None:
-            return gwasWithoutBeta(self.snp_true_false, score_column, threshold)
+            return gwasWithoutBeta(data_file, self.snp_true_false, score_column, threshold)
         else:
-            return gwasWithBeta(beta_column, self.beta_true_false, self.snp_true_false, score_column, threshold)
+            return gwasWithBeta(data_file, beta_column, self.beta_true_false, self.snp_true_false, score_column, threshold)
 
     def adjust_score(self, score):
         """
