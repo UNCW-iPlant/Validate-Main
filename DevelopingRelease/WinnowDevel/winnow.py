@@ -32,6 +32,7 @@ class Winnow:
         if self.args_dict['kt_type'] == 'OTE':
             self.load_ote()
         else:
+            # add other KT methods here
             print 'Currently only OTE is supported'
 
     def load_ote(self):
@@ -185,13 +186,6 @@ class Winnow:
                         f.write('SNP ID \tP-Value')
                 self.save_snp_score(snp, score, adjusted)
 
-    def save_settings(self):
-        """
-        Saves the parameters: Output file, analysis type, Known truth type, and threshold to a text file
-
-        """
-        writeSettings(self.args_dict)
-
 
 def initialize():
     """
@@ -236,6 +230,7 @@ def main():
     w = Winnow(args)
     w.load_kt()
     w.write_to_file(w.do_analysis())
+    writeSettings(w.args_dict)
     w.save_settings()
 
 
