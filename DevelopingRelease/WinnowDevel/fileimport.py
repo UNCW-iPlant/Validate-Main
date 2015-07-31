@@ -18,7 +18,7 @@ def trueFalse(currentSnp, ktSnps):
         return False
 
 
-def writeCSV(filename, keepToWrite, method="wb", exportDelimiter=","):
+def writeCSV(filename, keepToWrite, beta, method="wb", exportDelimiter=","):
     """
     Writes the Winnow output file once analysis is complete
 
@@ -29,12 +29,25 @@ def writeCSV(filename, keepToWrite, method="wb", exportDelimiter=","):
     """
     with open(filename + ".txt", method) as openFile:
         openFileWriter = csv.writer(openFile, delimiter=exportDelimiter)
+        if beta:
+            header = "Names", "rmse", "mae", "mattcorr", "auc", "TruePositives", "FalsePositives", "TrueNegatives",\
+                     "FalseNegatives","TruePosRate", "FalsePosRate", "error", "accuracy" "sens", "spec", "precision", \
+                     "fdr", "youden"
+            data = keepToWrite['names'], keepToWrite['rmse'], keepToWrite['mae'], keepToWrite['mattcorr'], \
+                   keepToWrite['auc'], keepToWrite['tp'], keepToWrite['fp'], keepToWrite['tn'], keepToWrite['fn'], \
+                   keepToWrite['tpr'], keepToWrite['fpr'], keepToWrite['error'], keepToWrite['accuracy'], \
+                   keepToWrite['sens'], keepToWrite['spec'], keepToWrite['prec'], keepToWrite['fdr'], \
+                   keepToWrite['youden']
+        else:
+            header = "Names", "mattcorr", "auc", "TruePositives", "FalsePositives", "TrueNegatives", "FalseNegatives",\
+                     "TruePosRate","FalsePosRate","error", "accuracy", "sens", "spec", "precision", "fdr", "youden"
+            data = keepToWrite['names'], keepToWrite['mattcorr'], keepToWrite['auc'], keepToWrite['tp'], \
+                   keepToWrite['fp'], keepToWrite['tn'], keepToWrite['fn'], keepToWrite['tpr'], keepToWrite['fpr'], \
+                   keepToWrite['error'], keepToWrite['accuracy'], keepToWrite['sens'], keepToWrite['spec'], \
+                   keepToWrite['prec'], keepToWrite['fdr'], keepToWrite['youden']
         if method == "wb":
-            openFileWriter.writerow(keepToWrite[0])
-        currentRow = list()
-        for item in keepToWrite[1]:
-            currentRow.append(item)
-        openFileWriter.writerow(currentRow)
+            openFileWriter.writerow(header)
+        openFileWriter.writerow(data)
 
 
 def writeSettings(winnowargs):

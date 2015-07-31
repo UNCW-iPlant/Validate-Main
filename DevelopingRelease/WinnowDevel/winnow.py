@@ -130,11 +130,15 @@ class Winnow:
         :param gen: generator that yields data to be written
         """
         first_for_header = True
+        if self.args_dict['beta'] is None:
+            beta = False
+        else:
+            beta = True
         for each in gen:
             if not first_for_header:
-                writeCSV(self.args_dict['filename'], each, 'a', '\t')
+                writeCSV(self.args_dict['filename'], each, beta, 'a', '\t')
             else:
-                writeCSV(self.args_dict['filename'], each, 'wb', '\t')
+                writeCSV(self.args_dict['filename'], each, beta, 'wb', '\t')
                 first_for_header = False
         gen.close()
 
@@ -173,7 +177,7 @@ class Winnow:
         """
         Saves the file name, p-value, and adjusted p-value if set
 
-        :param data: the data file
+        :param snp: the SNP list
         :param score: the list of p-values
         :param adjusted: the list of adjusted p-values
         """
