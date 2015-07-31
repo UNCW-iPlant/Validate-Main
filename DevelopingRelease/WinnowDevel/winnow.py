@@ -11,6 +11,7 @@ from gwas import gwasWithBeta, gwasWithoutBeta
 from adjustments import fdr_bh
 import os
 import data
+import sys
 
 
 class Winnow:
@@ -46,7 +47,10 @@ class Winnow:
         kt_file = data.Data(self.args_dict['truth'], self.args_dict['kt_type_separ'], skiprow=True)
         acquired_data = data.Data(self.args_dict['folder'] + '/' + app_output_list[0], self.args_dict['separ'],
                                   skiprow=False)
-        snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
+        try:
+            snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
+        except ValueError:
+            header_error(self.args_dict, acquired_data.header)
         kt_snps = data_to_list(kt_file, 1, 0)
         kt_betas = data_to_list(kt_file, 1, 1)
         for each in snp_column:
@@ -82,8 +86,14 @@ class Winnow:
         :return: a list of scores and, if selected, a list of betas in the form of a tuple
         """
         acquired_data = data.Data(self.args_dict['folder'] + '/' + data_file, self.args_dict['separ'], skiprow=False)
-        score_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['score']), True)
-        snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
+        try:
+            score_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['score']), True)
+        except ValueError:
+            header_error(self.args_dict['score'], acquired_data.header)
+        try:
+            snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
+        except ValueError:
+            header_error(self.args_dict['snp'], acquired_data.header)
         adjusted_score_column = self.adjust_score(score_column)
         self.save_snp_score(snp_column, score_column, adjusted_score_column)
         if self.args_dict['beta'] is not None:
@@ -185,6 +195,11 @@ class Winnow:
                     else:
                         f.write('SNP ID \tP-Value')
                 self.save_snp_score(snp, score, adjusted)
+
+
+def header_error(header, acquired_data):
+    print "\nError: " + header + " not found in the file header:\n" + str(acquired_data)
+    sys.exit()
 
 
 def initialize():
