@@ -197,8 +197,15 @@ class Winnow:
                 self.save_snp_score(snp, score, adjusted)
 
 
-def header_error(header, acquired_data):
-    print "\nError: " + header + " not found in the file header:\n" + str(acquired_data)
+def header_error(col_name, header):
+    """
+    Function for handling ValueErrors while loading input files columns by header. If the column header is not found,
+    prints the column name, header, and terminates.
+
+    :param col_name: the column header given as a parameter
+    :param header: the file header
+    """
+    print "\nError: " + col_name + " not found in the file header:\n" + str(header)
     sys.exit()
 
 
@@ -246,7 +253,6 @@ def main():
     w.load_kt()
     w.write_to_file(w.do_analysis())
     writeSettings(w.args_dict)
-    w.save_settings()
 
 
 if __name__ == "__main__":
