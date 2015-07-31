@@ -50,7 +50,8 @@ class Winnow:
         try:
             snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
         except ValueError:
-            header_error(self.args_dict, acquired_data.header)
+            sys.exit("\nError: " + self.args_dict['snp'] + " not found in the file header:\n"
+                     + str(acquired_data.header))
         kt_snps = data_to_list(kt_file, 1, 0)
         kt_betas = data_to_list(kt_file, 1, 1)
         for each in snp_column:
@@ -89,11 +90,14 @@ class Winnow:
         try:
             score_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['score']), True)
         except ValueError:
-            header_error(self.args_dict['score'], acquired_data.header)
+            sys.exit("\nError: " + self.args_dict['score'] + " not found in the file header:\n"
+                     + str(acquired_data.header))
         try:
             snp_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['snp']))
+
         except ValueError:
-            header_error(self.args_dict['snp'], acquired_data.header)
+            sys.exit("\nError: " + self.args_dict['snp'] + " not found in the file header:\n"
+                     + str(acquired_data.header))
         adjusted_score_column = self.adjust_score(score_column)
         self.save_snp_score(snp_column, score_column, adjusted_score_column)
         if self.args_dict['beta'] is not None:
@@ -201,18 +205,6 @@ class Winnow:
                 self.save_snp_score(snp, score, adjusted)
 
 
-def header_error(col_name, header):
-    """
-    Function for handling ValueErrors while loading input files columns by header. If the column header is not found,
-    prints the column name, header, and terminates.
-
-    :param col_name: the column header given as a parameter
-    :param header: the file header
-    """
-    print "\nError: " + col_name + " not found in the file header:\n" + str(header)
-    sys.exit()
-
-
 def initialize():
     """
     Displays graphics from commandline.py and loads runtime parameters, from a tuple, as a dictionary.
@@ -246,6 +238,19 @@ def data_to_list(data_file, x, y, is_float=False):
     return column
 
 
+def verify_files(args):
+    file_error = False
+    error_string = "\n"
+    if not os.path.isfile(args['truth']):
+        error_string += args['truth'] + " not found. Terminating.\n"
+        file_error = True
+    if not os.path.isdir(args['folder']):
+        error_string += args['folder'] + " not found. Terminating."
+        file_error = True
+    if file_error:
+        sys.exit(error_string)
+
+
 def main():
     """
     Sets the args dictionary - the runtime parameters - from the initialize function, creates a new Winnow using those
@@ -253,6 +258,7 @@ def main():
 
     """
     args = initialize()
+    verify_files(args)
     w = Winnow(args)
     w.load_kt()
     w.write_to_file(w.do_analysis())
