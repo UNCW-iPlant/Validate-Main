@@ -34,7 +34,7 @@ class Winnow:
             self.load_ote()
         else:
             # add other KT methods here
-            print 'Currently only OTE is supported'
+            sys.exit('Currently only OTE is supported')
 
     def load_ote(self):
         """
