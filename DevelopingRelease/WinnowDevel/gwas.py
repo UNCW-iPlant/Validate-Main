@@ -16,19 +16,16 @@ def gwasWithBeta(data_file, betaColumn, betaTrueFalse, snpTrueFalse, scoreColumn
     :param threshold: significant threshold
     :return: an array of functions and an array of those functions' results
     """
-    return ["Names", "rmse", "mae", "mattcorr", "auc", "TruePositives", "FalsePositives", "TrueNegatives",
-            "FalseNegatives",
-            "TruePosRate", "FalsePosRate", "error", "accuracy" "sens", "spec", "precision", "fdr", "youden"], \
-           [data_file, rmse(betaColumn, betaTrueFalse), mae(betaColumn, betaTrueFalse),
-            mattcorr(snpTrueFalse, threshold, scoreColumn),
-            auc(snpTrueFalse, scoreColumn), tp(snpTrueFalse, threshold, scoreColumn),
-            fp(snpTrueFalse, threshold, scoreColumn), tn(snpTrueFalse, threshold, scoreColumn),
-            fn(snpTrueFalse, threshold, scoreColumn),
-            tpr(snpTrueFalse, threshold, scoreColumn), fpr(snpTrueFalse, threshold, scoreColumn),
-            error(snpTrueFalse, threshold, scoreColumn), accuracy(snpTrueFalse, threshold, scoreColumn),
-            sens(snpTrueFalse, threshold, scoreColumn), spec(snpTrueFalse, threshold, scoreColumn),
-            precision(snpTrueFalse, threshold, scoreColumn), fdr(snpTrueFalse, threshold, scoreColumn),
-            youden(snpTrueFalse, threshold, scoreColumn)]
+    return {'names': data_file, 'rmse': rmse(betaColumn, betaTrueFalse), 'mae': mae(betaColumn, betaTrueFalse),
+            'mattcorr': mattcorr(snpTrueFalse, threshold, scoreColumn), 'auc': auc(snpTrueFalse, scoreColumn),
+            'tp': tp(snpTrueFalse, threshold, scoreColumn), 'fp': fp(snpTrueFalse, threshold, scoreColumn),
+            'tn': tn(snpTrueFalse, threshold, scoreColumn), 'fn': fn(snpTrueFalse, threshold, scoreColumn),
+            'tpr': tpr(snpTrueFalse, threshold, scoreColumn), 'fpr': fpr(snpTrueFalse, threshold, scoreColumn),
+            'error': error(snpTrueFalse, threshold, scoreColumn),
+            'accuracy': accuracy(snpTrueFalse, threshold, scoreColumn),
+            'sens': sens(snpTrueFalse, threshold, scoreColumn), 'spec': spec(snpTrueFalse, threshold, scoreColumn),
+            'prec': precision(snpTrueFalse, threshold, scoreColumn), 'fdr': fdr(snpTrueFalse, threshold, scoreColumn),
+            'youden': youden(snpTrueFalse, threshold, scoreColumn)}
 
 
 def gwasWithoutBeta(data_file, snpTrueFalse, scoreColumn, threshold):
@@ -40,22 +37,12 @@ def gwasWithoutBeta(data_file, snpTrueFalse, scoreColumn, threshold):
     :param threshold: significant threshold
     :return: an array of functions and an array of those functions' results
     """
-    return ["Names", "mattcorr", "auc", "TruePositives", "FalsePositives", "TrueNegatives", "FalseNegatives",
-            "TruePosRate",
-            "FalsePosRate",
-            "error", "accuracy", "sens", "spec", "precision", "fdr", "youden"], [
-                data_file, mattcorr(snpTrueFalse, threshold, scoreColumn),
-                auc(snpTrueFalse, scoreColumn),
-                tp(snpTrueFalse, threshold, scoreColumn),
-                fp(snpTrueFalse, threshold, scoreColumn),
-                tn(snpTrueFalse, threshold, scoreColumn),
-                fn(snpTrueFalse, threshold, scoreColumn),
-                tpr(snpTrueFalse, threshold, scoreColumn),
-                fpr(snpTrueFalse, threshold, scoreColumn),
-                error(snpTrueFalse, threshold, scoreColumn),
-                accuracy(snpTrueFalse, threshold, scoreColumn),
-                sens(snpTrueFalse, threshold, scoreColumn),
-                spec(snpTrueFalse, threshold, scoreColumn),
-                precision(snpTrueFalse, threshold, scoreColumn),
-                fdr(snpTrueFalse, threshold, scoreColumn),
-                youden(snpTrueFalse, threshold, scoreColumn)]
+    return {'names': data_file,  'mattcorr': mattcorr(snpTrueFalse, threshold, scoreColumn),
+            'auc': auc(snpTrueFalse, scoreColumn), 'tp': tp(snpTrueFalse, threshold, scoreColumn),
+            'fp': fp(snpTrueFalse, threshold, scoreColumn), 'tn': tn(snpTrueFalse, threshold, scoreColumn),
+            'fn': fn(snpTrueFalse, threshold, scoreColumn), 'tpr': tpr(snpTrueFalse, threshold, scoreColumn),
+            'fpr': fpr(snpTrueFalse, threshold, scoreColumn), 'error': error(snpTrueFalse, threshold, scoreColumn),
+            'accuracy': accuracy(snpTrueFalse, threshold, scoreColumn),
+            'sens': sens(snpTrueFalse, threshold, scoreColumn), 'spec': spec(snpTrueFalse, threshold, scoreColumn),
+            'prec': precision(snpTrueFalse, threshold, scoreColumn), 'fdr': fdr(snpTrueFalse, threshold, scoreColumn),
+            'youden': youden(snpTrueFalse, threshold, scoreColumn)}

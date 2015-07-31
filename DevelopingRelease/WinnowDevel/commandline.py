@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ 
-Functions for indentifying and using the command-line to execute Winnow for Python
+Functions for identifying and using the command-line to execute Winnow for Python
 """
 
 
@@ -28,10 +28,10 @@ def usage():
     print "Command-line usage help menu.\n"
     print "--verbose or -v for verbose mode"
     print "--analysis or -a to specify either 'GWAS' or 'prediction' (if blank, Winnow assumes GWAS)"
-    print "--Folder or -F to input folder of box results (required)"
-    print "--Class or -C to specify the known-truth file for used simulation (required)"
-    print "--Snp or -S to specify a string for the name of the SNP column in results file (required)"
-    print "--Score or -P to specify a string for the name of the scoring column in results file (e.g., p-value; required)"
+    print "--folder or -F to input folder of box results (required)"
+    print "--class or -C to specify the known-truth file for used simulation (required)"
+    print "--snp or -S to specify a string for the name of the SNP column in results file (required)"
+    print "--score or -P to specify a string for the name of the scoring column in results file (e.g., p-value; required)"
     print "--beta or -b to specify a string for the name of the estimated SNP effect column in results file"
     print "--filename or -f to specify the desired filename for the Winnow output file"
     print "--threshold ir -t to specify a desired threshold for classification performetrics where necessary"
@@ -50,10 +50,10 @@ def checkArgs():
     parser.add_argument("-a", "--analysis", nargs='?',
                         help="The type of analysis for Winnow to perform (currently, only GWAS is supported)",
                         default="GWAS", type=str, choices=["GWAS"])
-    parser.add_argument("-F", "--Folder", required=True, type=str, help="The input folder of box results")
-    parser.add_argument("-C", "--Class", required=True, type=str, help="The known-truth file for used simulation")
-    parser.add_argument("-S", "--Snp", required=True, type=str, help="The name of the SNP column in results file")
-    parser.add_argument("-P", "--Score", required=True, type=str,
+    parser.add_argument("-F", "--folder", required=True, type=str, help="The input folder of box results")
+    parser.add_argument("-C", "--ktclass", required=True, type=str, help="The known-truth file for used simulation")
+    parser.add_argument("-S", "--snp", required=True, type=str, help="The name of the SNP column in results file")
+    parser.add_argument("-P", "--score", required=True, type=str,
                         help="The name of the scoring column in results file (e.g. p-value)")
     parser.add_argument("-b", "--beta", type=str, help="Name of the estimated SNP effect column in results file")
     parser.add_argument("-f", "--filename", type=str, default="Results",
@@ -76,11 +76,11 @@ def checkArgs():
 
     """Change command line arguments into variables to pass along to the rest of the program"""
     verbose = args.verbose
-    folder = args.Folder
+    folder = args.folder
     analysis = args.analysis
-    truth = args.Class
-    snp = args.Snp
-    score = args.Score
+    truth = args.ktclass
+    snp = args.snp
+    score = args.score
     beta = args.beta
     filename = args.filename
     threshold = args.threshold
