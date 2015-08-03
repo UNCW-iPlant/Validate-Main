@@ -31,7 +31,7 @@ def usage():
     print "--folder or -F to input folder of box results (required)"
     print "--class or -C to specify the known-truth file for used simulation (required)"
     print "--snp or -S to specify a string for the name of the SNP column in results file (required)"
-    print "--score or -P to specify a string for the name of the scoring column in results file (e.g., p-value; required)"
+    print "--score or -P to specify a string for the name of the scoring column in results file (e.g. p-value; required)"
     print "--beta or -b to specify a string for the name of the estimated SNP effect column in results file"
     print "--filename or -f to specify the desired filename for the Winnow output file"
     print "--threshold ir -t to specify a desired threshold for classification performetrics where necessary"
@@ -67,7 +67,7 @@ def checkArgs():
     parser.add_argument("-r", "--kttypeseper", choices=["comma", "whitespace", "tab"], nargs='?', default="whitespace",
                         help="Specify delimitation in known-truth file")
     parser.add_argument("-y", "--severity", type=float, default=None, nargs='?',
-                        help="Severity ratio used in the h-measure calculation (currently not available, can leave blank)")
+                        help="Severity ratio used in the h-measure calculation (currently not available)")
     parser.add_argument("-p", "--pvaladjust", default=None, nargs='?', choices=["BH"],
                         help="Specify the type of p-value adjustment")
     parser.add_argument("-o", "--savep", default=False, action="store_true",
@@ -107,7 +107,6 @@ def checkArgs():
         print "P-value adjustment is set as", pvaladjust
         if savep:
             print "Saving p-values"
-
     if pvaladjust not in ["BH"] and pvaladjust is not None:
         print 'Currently only BH (Benjamini-Hochberg) is supported, the original P-values will be used'
 

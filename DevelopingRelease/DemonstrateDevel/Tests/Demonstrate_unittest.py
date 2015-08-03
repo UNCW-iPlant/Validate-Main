@@ -12,12 +12,12 @@ class DemonstrateTest(unittest.TestCase):
     def test_function(self):
         self.load_r()
         r_dem = robjects.globalenv['Demonstrate']
-        outputs = ['Mean AUC By Population Structure and Heritability',
-                   'Mean MAE By Population Structure and Heritability']
+        outputs = ['Mean AUC By Population Structure and Heritability.pdf',
+                   'Mean MAE By Population Structure and Heritability.pdf']
         for each in outputs:
             if os.path.isfile(self.testdir + '/' + each):
                 os.remove(self.testdir + '/' + each)
-        r_dem(self.testdir)
+        r_dem(self.testdir, "results.param")
         for each in outputs:
             self.assertTrue(os.path.isfile(self.testdir + '/' + each))
             self.assertTrue(os.path.getsize(self.testdir + '/' + each) > 0)

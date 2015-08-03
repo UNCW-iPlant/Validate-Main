@@ -1,8 +1,8 @@
 """
 Functions to detect if something is meant to be isHidden.
 
-The main reason to use this function is in case some output folders carry a history file with them (for instance, .RHistory files)
-which would cause an error when read by the Winnow program.
+The main reason to use this function is in case some output folders carry a history file with them
+(for instance, .RHistory files) which would cause an error when read by the Winnow program.
 """
 
 

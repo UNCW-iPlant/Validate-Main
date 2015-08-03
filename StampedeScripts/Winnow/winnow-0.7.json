@@ -32,7 +32,7 @@
       "details": {
         "label": "Known-truth file name",
         "description": "Specifies the \"known-truth\" file for the data group you are analyzing",
-        "attribute": "--Class",
+        "attribute": "--class",
         "showAttribute": true
       },
       "semantics": {
@@ -53,7 +53,7 @@
       "details": {
         "label": "Folder for collected results",
         "description": "The folder containing the aggregated GWAS results you wish to analyze",
-        "attribute": "--Folder",
+        "attribute": "--folder",
         "showAttribute": true
       },
       "semantics": {
@@ -74,7 +74,7 @@
       "details": {
         "label": "Name for the SNP column in input file",
         "description": "A name for the SNP column in the input file",
-        "attribute": "--SNP",
+        "attribute": "--snp",
         "showAttribute": true
       },
       "semantics": {
@@ -95,7 +95,7 @@
       "details": {
         "label": "Name for p-value column",
         "description": "Name for the p-value column in the input file (e.g. p-value)",
-        "attribute": "--Score",
+        "attribute": "--score",
         "showAttribute": true
       },
       "semantics": {
