@@ -25,12 +25,11 @@
 Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Population Structure and Heritability.pdf",
                         make.MAE.plot=TRUE, MAE.plot.title="Mean MAE By Population Structure and Heritability.pdf",herit.strings=list("_03_","_04_","_06_")
                         ,herit.values=list(0.3,0.4,0.6),struct.strings=list("PheHasStruct","PheNPStruct"),struct.values=list(TRUE,FALSE)) {
-  if (!is.null(settingsfile)){
-    setwd(dir)
-    settings <- readLines(settingsfile)
-  }
-  writeSettings <- function(settings){
-    if (!is.null(settings)){
+
+  writeSettings <- function(){
+    if (!is.null(settingsfile)){
+      setwd(dir)
+      settings <- readLines(settingsfile)
       plot(0:10, type="n", xaxt="n", yaxt="n", bty="n", xlab="", ylab="")
       text(font=2, 5, 8, "Winnow Settings:")
       text(5, 7, settings[1])
@@ -96,7 +95,7 @@ Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.tit
     pdf(file=AUC.plot.title)
     lineplot.CI(totalDataSet$Herit,totalDataSet$AUC,totalDataSet$Structure,main=AUC.plot.title,
                 xlab="Heritability",ylab="Mean AUC",trace.label="Pop. Structure")
-    writeSettings(settings)
+    writeSettings()
     dev.off()
   }
 
@@ -104,7 +103,7 @@ Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.tit
     pdf(file=MAE.plot.title)
     lineplot.CI(totalDataSet$Herit,totalDataSet$MAE,totalDataSet$Structure,main=MAE.plot.title,
                 xlab="Heritability",ylab="Mean MAE",trace.label="Pop. Structure")
-    writeSettings(settings)
+    writeSettings()
     dev.off()
   }
 

@@ -44,11 +44,10 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
   filenames <- unlist(tools::file_path_sans_ext(Sys.glob("*.txt")))
   myfiles<-readFiles(dir)
   print(filenames)
-  if (!is.null(settingsfile)){
-    settings <- readLines(settingsfile)
-  }
-  writeSettings <- function(settings){
-    if (!is.null(settings)){
+
+  writeSettings <- function(){
+    if (!is.null(settingsfile)){
+      settings <- readLines(settingsfile)
       plot(0:10, type="n", xaxt="n", yaxt="n", bty="n", xlab="", ylab="")
       text(font=2, 5, 8, "Winnow Settings:")
       text(5, 7, settings[1])
@@ -59,8 +58,9 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
       }
     }
   }
-  makeSettingsNote <- function(settings){
-    if (!is.null(settings)){
+  makeSettingsNote <- function(){
+    if (!is.null(settingsfile)){
+      settings <- readLines(settingsfile)
       pushViewport(viewport())
       grid.text(label=settings[1], x=unit(1, "npc")-unit(5, "mm"), y=unit(170, "mm"), just=c("right", "bottom"),
       gp = gpar(cex = 0.7))
@@ -81,13 +81,13 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
     for (i in 1:length(myfiles)){
       hist(myfiles[[i]]$tp, main=paste(filenames[[i]]," True Positives",sep=":"), xlab="True Positives")
     }
-    writeSettings(settings)
+    writeSettings()
     dev.off()
     pdf(file="FP Histograms.pdf")
     for (i in 1:length(myfiles)){
       hist(myfiles[[i]]$fp, main=paste(filenames[[i]]," False Positives",sep=":"), xlab="False Positives")
     }
-    writeSettings(settings)
+    writeSettings()
     dev.off()
     #Make a quick summary table comparing PPV/Precision, sensivity, and specificity
     #and output said table to a CSV file
@@ -200,7 +200,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
       xlim(0, fa) + ylim(0, ta) +
       scale_colour_discrete(labels=filenames)
     print(p2)
-    makeSettingsNote(settings)
+    makeSettingsNote()
 
 
     dev.off()
@@ -232,7 +232,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
       theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
       scale_colour_discrete(label=filenames)
     print(p2)
-    makeSettingsNote(settings)
+    makeSettingsNote()
 
     dev.off()
   }
