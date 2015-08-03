@@ -272,6 +272,7 @@ def main():
 	format_data(filename, new_phenotypes)
 
 	print "\n\n"
+
 def format_data(f, pheno):
 	ped_file = open(f+'_genomes.ped')
 	new_file = open(f+'temp_genomes.ped', 'w')

@@ -3,6 +3,7 @@
 #' This function allows you to enter a directory including multiple Winnow output files and creating
 #' visualizations fromt the output.
 #' @param dir A character string: input the directory containing the text files you would like to use.
+#' @param settingsfile A character string: input the winnow .param file containing settings used. Default is NULL and is not required.
 #' @param make.AUC.plot Option to make a AUC by Population Structure and Heritability. Default set to TRUE
 #' @param AUC.plot.title A Character String: title of the AUC plot.
 #' Default set to "Mean AUC By Population Structure and Heritability"
@@ -21,10 +22,25 @@
 #' @examples
 #' demonstrate (dir="path")
 
-Demonstrate <- function(dir, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Population Structure and Heritability",
-                        make.MAE.plot=TRUE, MAE.plot.title="Mean MAE By Population Structure and Heritability",herit.strings=list("_03_","_04_","_06_")
+Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Population Structure and Heritability.pdf",
+                        make.MAE.plot=TRUE, MAE.plot.title="Mean MAE By Population Structure and Heritability.pdf",herit.strings=list("_03_","_04_","_06_")
                         ,herit.values=list(0.3,0.4,0.6),struct.strings=list("PheHasStruct","PheNPStruct"),struct.values=list(TRUE,FALSE)) {
-
+  if (!is.null(settingsfile)){
+    setwd(dir)
+    settings <- readLines(settingsfile)
+  }
+  writeSettings <- function(settings){
+    if (!is.null(settings)){
+      plot(0:10, type="n", xaxt="n", yaxt="n", bty="n", xlab="", ylab="")
+      text(font=2, 5, 8, "Winnow Settings:")
+      text(5, 7, settings[1])
+      text(5, 6, settings[2])
+      text(5, 5, settings[3])
+      if (!is.na(settings[4])){
+        text(5, 4, settings[4])
+      }
+    }
+  }
   makeFiles <- function(dir) {
 
     readFiles <- function(dir) {
@@ -80,6 +96,7 @@ Demonstrate <- function(dir, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Pop
     pdf(file=AUC.plot.title)
     lineplot.CI(totalDataSet$Herit,totalDataSet$AUC,totalDataSet$Structure,main=AUC.plot.title,
                 xlab="Heritability",ylab="Mean AUC",trace.label="Pop. Structure")
+    writeSettings(settings)
     dev.off()
   }
 
@@ -87,6 +104,7 @@ Demonstrate <- function(dir, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Pop
     pdf(file=MAE.plot.title)
     lineplot.CI(totalDataSet$Herit,totalDataSet$MAE,totalDataSet$Structure,main=MAE.plot.title,
                 xlab="Heritability",ylab="Mean MAE",trace.label="Pop. Structure")
+    writeSettings(settings)
     dev.off()
   }
 
