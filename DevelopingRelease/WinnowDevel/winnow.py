@@ -239,6 +239,12 @@ def data_to_list(data_file, x, y, is_float=False):
 
 
 def verify_files(args):
+    """
+    Verifies that the KT file and input folders exist. If they do not, the program will terminate and alert the user
+    which file(s) are causing the problem.
+
+    :param args: arguments passed to winnow containing the file and folder names
+    """
     file_error = False
     error_string = "\n"
     if not os.path.isfile(args['truth']):

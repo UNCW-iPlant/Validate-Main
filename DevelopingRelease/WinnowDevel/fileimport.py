@@ -63,7 +63,7 @@ def writeSettings(winnowargs):
         a += 'WithBeta'
     else:
         a += 'WithoutBeta'
-    with open(winnowargs['filename'] + "_parameters.txt", 'wb') as openFile:
+    with open(winnowargs['filename'] + "_.parameters", 'wb') as openFile:
         openFileWriter = csv.writer(openFile, delimiter='\t')
         openFileWriter.writerow(('Analysis Type: ', a))
         openFileWriter.writerow(('KT Type: ', winnowargs['kt_type']))
