@@ -3,6 +3,7 @@
 #' This function allows you to enter a directory including multiple Winnow output files and creating
 #' visualizations fromt the output. 
 #' @param dir A character string: input the directory containing the text files you would like to use.
+#' @param settingsfile A character string: input the winnow .param file containing settings used. Default is NULL and is not required.
 #' @param make.pos.plot Option to make a true positive by false positive plot. Default set to TRUE
 #' @param pos.plot.title A Character String: title of the True/False Positives plot. 
 #' Default set to "True Positives by False Positives"
@@ -23,13 +24,15 @@
 #' @export
 #' @examples
 #' demonstrate2 (dir="path")
+#' demonstrate2 (dir="path", settingsfile="results.param")
 
-Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives by False Positives",
+Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.title="True Positives by False Positives",
                        make.error.plot=TRUE, error.plot.title="Plot of AUC by MAE", extra.plots=TRUE, 
                        AUC.axis.min=0, AUC.axis.max=1.0, MAE.axis.min=0, MAE.axis.max=2.0){
   
   require(ggplot2)
   require(plyr)
+  require(grid)
   
   readFiles <- function(dir) {
     setwd(dir)
@@ -37,21 +40,54 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
     listOfFiles <- lapply(files, function(x) read.table(x, header=TRUE))
     return(listOfFiles)
   }
+
   filenames <- unlist(tools::file_path_sans_ext(Sys.glob("*.txt")))
   myfiles<-readFiles(dir)
   print(filenames)
-  
+  if (!is.null(settingsfile)){
+    settings <- readLines(settingsfile)
+  }
+  writeSettings <- function(settings){
+    if (!is.null(settings)){
+      plot(0:10, type="n", xaxt="n", yaxt="n", bty="n", xlab="", ylab="")
+      text(font=2, 5, 8, "Winnow Settings:")
+      text(5, 7, settings[1])
+      text(5, 6, settings[2])
+      text(5, 5, settings[3])
+      if (!is.na(settings[4])){
+        text(5, 4, settings[4])
+      }
+    }
+  }
+  makeSettingsNote <- function(settings){
+    if (!is.null(settings)){
+      pushViewport(viewport())
+      grid.text(label=settings[1], x=unit(1, "npc")-unit(5, "mm"), y=unit(170, "mm"), just=c("right", "bottom"),
+      gp = gpar(cex = 0.7))
+      grid.text(label=settings[2], x=unit(1, "npc")-unit(5, "mm"), y=unit(165, "mm"), just=c("right", "bottom"),
+      gp = gpar(cex = 0.7))
+      grid.text(label=settings[3], x=unit(1, "npc")-unit(5, "mm"), y=unit(160, "mm"), just=c("right", "bottom"),
+      gp = gpar(cex = 0.7))
+      if(!is.na(settings[4])){
+        grid.text(label=settings[4], x=unit(1, "npc")-unit(5, "mm"), y=unit(155, "mm"), just=c("right", "bottom"),
+        gp = gpar(cex = 0.7))
+      }
+      popViewport()
+    }
+  }
   #Create some extra plots for univariate visualization
   if (extra.plots){
     pdf(file="TP Histograms.pdf")
     for (i in 1:length(myfiles)){
       hist(myfiles[[i]]$tp, main=paste(filenames[[i]]," True Positives",sep=":"), xlab="True Positives")
     }
+    writeSettings(settings)
     dev.off()
     pdf(file="FP Histograms.pdf")
     for (i in 1:length(myfiles)){
       hist(myfiles[[i]]$fp, main=paste(filenames[[i]]," False Positives",sep=":"), xlab="False Positives")
     }
+    writeSettings(settings)
     dev.off()
     #Make a quick summary table comparing PPV/Precision, sensivity, and specificity
     #and output said table to a CSV file
@@ -71,7 +107,7 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
       myfiles[[i]]$file <- sQuote(i)
       detach(myfiles[[i]])
     }
-    
+
     #Determines maximum value of all true positives
     tpmax<-function(list){
       tps<-list()
@@ -142,10 +178,9 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
     
     #Creates plot of each file with rectangles from minimums to medians and medians 
     #to maximums of all true and false positives. Points in the green area represent 
-    #the "best" outputs, those in the red area represent the "worst", and those in
+    #the "best" outputs, those in the gray area represent the "worst", and those in
     #blue areas are "okay". 
     p <- ggplot(TPFP, aes(x=fp, y=tp), environment=environment())
-    
     p2 <- p + 
       geom_rect(data=all.data[1,], aes(xmin=fc, xmax=fa, ymin=tc, ymax=ta), 
                 alpha=0.2, fill="blue", linetype=0) +
@@ -164,9 +199,10 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
       ggtitle("False Positives by True Positves") +
       xlim(0, fa) + ylim(0, ta) +
       scale_colour_discrete(labels=filenames)
-    
     print(p2)
-    
+    makeSettingsNote(settings)
+
+
     dev.off()
     
   }
@@ -189,15 +225,15 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
     pdf(file=pdfname)
     
     p <- ggplot(MAE_AUC, aes(x=mae, y=auc, color=file), environment()) + geom_point(
-      aes(size=count)) 
-    
-    p2 <- p + geom_smooth(method=lm, fullrange=TRUE) + 
+      aes(size=count))
+
+    p2 <- p + geom_smooth(method=lm, fullrange=TRUE) +
       theme(panel.background=element_rect(fill='white', colour='black')) +
       theme(panel.grid.major=element_blank(), panel.grid.minor=element_blank()) +
-      scale_colour_discrete(label=filenames) 
-    
+      scale_colour_discrete(label=filenames)
     print(p2)
-    
+    makeSettingsNote(settings)
+
     dev.off()
   }
   print("Done!")
