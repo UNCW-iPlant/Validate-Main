@@ -174,7 +174,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
     TPFP <- ddply(all.data, .(tp, fp, file), summarize, count=length(file))
     
     #Creates pdf output
-    pdf(file="True Positives vs. False Positives.pdf")
+    pdf(file=pos.plot.title)
     
     #Creates plot of each file with rectangles from minimums to medians and medians 
     #to maximums of all true and false positives. Points in the green area represent 
