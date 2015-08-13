@@ -41,7 +41,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
     return(listOfFiles)
   }
 
-  filenames <- unlist(tools::file_path_sans_ext(Sys.glob("*.txt")))
+  filenames <- unlist(list.files(dir, pattern="txt$"))
   myfiles<-readFiles(dir)
   print(filenames)
 
