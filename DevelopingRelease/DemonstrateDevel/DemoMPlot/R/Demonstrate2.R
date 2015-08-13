@@ -26,7 +26,7 @@
 #' demonstrate2 (dir="path")
 #' demonstrate2 (dir="path", settingsfile="results.param")
 
-Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.title="True Positives by False Positives",
+Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.title="True Positives vs. False Positives.pdf",
                        make.error.plot=TRUE, error.plot.title="Plot of AUC by MAE", extra.plots=TRUE, 
                        AUC.axis.min=0, AUC.axis.max=1.0, MAE.axis.min=0, MAE.axis.max=2.0){
   
