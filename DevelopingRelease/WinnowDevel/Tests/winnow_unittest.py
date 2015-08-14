@@ -45,8 +45,10 @@ class WinnowTest(unittest.TestCase):
         self.win = winnow.Winnow(self.args)
         self.win.load_kt()
         gen = self.win.do_analysis()
-        a = gen.next()[1]
-        self.assertEqual(format_float(a[1:]),
+        a = gen.next()
+        a = [a["rmse"], a["mae"], a["mattcorr"], a["auc"], a["tp"], a["fp"], a["tn"], a["fn"], a["tpr"], a["fpr"],
+             a["error"], a["accuracy"], a["sens"], a["spec"], a["prec"], a["fdr"], a["youden"]]
+        self.assertEqual(format_float(a),
                          [0.05896121, 0.18211783, -0.03838186, 0.43427679, 0, 384,
                           2816, 35, 0.0, 0.12, 0.12952087, 0.87047913, 0.0, 0.88, 0.0, 1.0, -0.12])
         gen.close()
@@ -57,9 +59,10 @@ class WinnowTest(unittest.TestCase):
         score_column = (0.003, 0.65, 0.004, 0.006, 0.078, 0.003, 0.0001, 0.513, 0.421, 0.0081, 0.043, 0.98)
         self.win.beta_true_false = (1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1)
         beta_column = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-        a = self.win.do_gwas("Name", score_column, beta_column)[1][1:]
-        a = format_float(a)
-        self.assertEqual(a,
+        a = self.win.do_gwas("Name", score_column, beta_column)
+        a = [a["rmse"], a["mae"], a["mattcorr"], a["auc"], a["tp"], a["fp"], a["tn"], a["fn"], a["tpr"], a["fpr"],
+             a["error"], a["accuracy"], a["sens"], a["spec"], a["prec"], a["fdr"], a["youden"]]
+        self.assertEqual(format_float(a),
                          [47.08333333, 5.91666667, 0.16903085, 0.56944444, 4.0, 3.0, 3.0, 2.0, 0.66666667, 0.5,
                           0.41666667, 0.58333333, 0.66666667, 0.5, 0.57142857, 0.42857143, 0.16666667])
 
