@@ -46,98 +46,126 @@ def usage():
 
 
 def check_args():
-    """ Checks for arguments at beginning of the execution of the main function """
+    """
+    Handles arguments for demonstrate and demonstrate2 modes.
 
+    Creates the argument parser and adds a subparser for demonstrate and demonstrate 2 with the needed arguments,
+    parses the given arguments as a dictionary, prints if selected, and returns the dictionary of arguments
+    :return: dictionary of arguments
+    """
     parser = argparse.ArgumentParser(description="Demonstrate command-line arguments")
     parser.add_argument("-v", "--verbose", help="Trigger verbose mode", action="store_true", default=False)
     parser.add_argument("-d", "--dir", required=True, type=str, help="The input folder")
-    parser.add_argument("-s", "--settingsfile", type=str, help="The .param file from winnow", default=None)
-    parser.add_argument("-o", "--mode", type=str, required=True, choices=["demo", "demo2"],
-                        help="Graphics mode (demo or demo2")
-    parser.add_argument("-a", "--auc", action="store_false", default=True,
-                        help="To include the AUC plot")
-    parser.add_argument("-t", "--auctitle", type=str, default="Mean AUC By Population Structure and Heritability",
-                        help="AUC plot title")
-    parser.add_argument("-m", "--mae", action="store_false", default=True,
-                        help="To include the MAE plot")
-    parser.add_argument("-y", "--maetitle", type=str, default="Mean MAE By Population Structure and Heritability",
-                        help="MAE plot title")
-    parser.add_argument("-r", "--heritstring", type=str, default=["_03_", "_04_", "_06_"],
-                        help="Heritability string from input data")
-    parser.add_argument("-l", "--heritvalue", type=float, default=[0.3, 0.4, 0.6],
-                        help="Heritability value from input data")
-    parser.add_argument("-u", "--structstring", type=str, default=["PheHasStruct", "PheNPStruct"],
-                        help="Structure string from input data")
-    parser.add_argument("-p", "--structvalue", type=bool, default=[True, False],
-                        help="Structure value from input data")
-    parser.add_argument("-q", "--pos", action="store_false", default=True,
+    parser.add_argument("-s", "--settings", type=str, help="The .param file from winnow", default=None)
+    subparsers = parser.add_subparsers(help="Program mode (e.g. run demonstrate or demonstrate2)",
+                                       dest="mode")
+    add_demo_command_options(subparsers)
+    add_demo2_command_options(subparsers)
+    args = vars(parser.parse_args())
+    if args["verbose"]:
+        print_parameters(args)
+    return args
+
+
+def add_demo_command_options(subparsers):
+    """
+    Adds the arguments pertaining to the original Demonstrate.
+
+    :param subparsers: the main argument parsers group of subparsers
+    """
+    demo_parser = subparsers.add_parser('demonstrate', help="Generate the original Demonstrate graphics")
+    demo_parser.add_argument("-a", "--auc", action="store_false", default=True,
+                             help="To include the AUC plot")
+    demo_parser.add_argument("-t", "--auctitle", type=str, default="Mean AUC By Population Structure and Heritability",
+                             help="AUC plot title")
+    demo_parser.add_argument("-m", "--mae", action="store_false", default=True,
+                             help="To include the MAE plot")
+    demo_parser.add_argument("-y", "--maetitle", type=str, default="Mean MAE By Population Structure and Heritability",
+                             help="MAE plot title")
+    demo_parser.add_argument("-r", "--heritstring", type=str, default=["_03_", "_04_", "_06_"],
+                             help="Heritability string from input data")
+    demo_parser.add_argument("-l", "--heritvalue", type=float, default=[0.3, 0.4, 0.6],
+                             help="Heritability value from input data")
+    demo_parser.add_argument("-u", "--structstring", type=str, default=["PheHasStruct", "PheNPStruct"],
+                             help="Structure string from input data")
+    demo_parser.add_argument("-p", "--structvalue", type=bool, default=[True, False],
+                             help="Structure value from input data")
+
+
+def add_demo2_command_options(subparsers):
+    """
+    Adds the arguments pertaining to the Demonstrate2 function.
+
+    :param subparsers: the main argument parsers group of subparsers
+    """
+    demo2_parser = subparsers.add_parser('demonstrate2', help="Generate the Demonstrate2 graphics")
+    demo2_parser.add_argument("-q", "--pos", action="store_false", default=True,
                         help="To include the TP by FP plot")
-    parser.add_argument("-i", "--postitle", type=str, default="True Positives by False Positives",
+    demo2_parser.add_argument("-i", "--postitle", type=str, default="True Positives by False Positives",
                         help="TP by FP plot title")
-    parser.add_argument("-e", "--error", action="store_false", default=True,
+    demo2_parser.add_argument("-e", "--error", action="store_false", default=True,
                         help="To include the error plot")
-    parser.add_argument("-w", "--errortitle", type=str, default="Plot of AUC by MAE",
+    demo2_parser.add_argument("-w", "--errortitle", type=str, default="Plot of AUC by MAE",
                         help="The error plot title")
-    parser.add_argument("-x", "--extraplots", action="store_false", default=True,
+    demo2_parser.add_argument("-x", "--extraplots", action="store_false", default=True,
                         help="To include extra plots")
-    parser.add_argument("-z", "--aucmin", type=float, default=0,
+    demo2_parser.add_argument("-z", "--aucmin", type=float, default=0,
                         help="Minimum auc axis value")
-    parser.add_argument("-b", "--aucmax", type=float, default=1.0,
+    demo2_parser.add_argument("-b", "--aucmax", type=float, default=1.0,
                         help="Maximum auc axis value")
-    parser.add_argument("-n", "--maemin", type=float, default=0,
+    demo2_parser.add_argument("-n", "--maemin", type=float, default=0,
                         help="Minimum mae axis value")
-    parser.add_argument("-c", "--maemax", type=float, default=2.0,
+    demo2_parser.add_argument("-c", "--maemax", type=float, default=2.0,
                         help="Maximum mae axis value")
-    parser = parser.parse_args()
-    if parser.verbose:
-        print "\nVerbose Mode"
-        print "Input directory is specified as", parser.dir
-        if parser.settingsfile is not None:
-            print "Settings file is specified as", parser.settingsfile
-        print "Demonstrate mode is set to", parser.mode
-        if parser.mode == "demo":
-            if parser.auc:
-                print "AUC plot not included"
-            else:
-                print "AUC plot included"
-                print "AUC plot title specified as", parser.auctitle
-            if parser.mae:
-                print "MAE plot not included"
-            else:
-                print "MAE plot included"
-                print "MAE plot title specified as", parser.maetitle
-            print "Heritability strings specified as", parser.heritstring
-            print "Heritability values specified as", parser.heritvalue
-            print "Structure strings specified as", parser.structstring
-            print "Structure values specified as", parser.structvalue
-        elif parser.mode == "demo2":
-            if parser.pos:
-                print "TP by FP plot not included"
-            else:
-                print "TP by FP plot included"
-                print "TP by FP plot title specified as", parser.postitle
-            if parser.error:
-                print "Error plot not included"
-            else:
-                print "Error plot included"
-                print "Error plot title specified as", parser.errortitle
-            if parser.extraplots:
-                print "Extra plots not included"
-            print "AUC axis minimum specified as", parser.aucmin
-            print "AUC axis maximum specified as", parser.aucmax
-            print "MAE axis minimum specified as", parser.maemin
-            print "MAE axis maximum specified as", parser.maemax
-    if parser.mode == "demo":
-        return {"dir": parser.dir, "settings": parser.settingsfile, "mode": parser.mode, "auc": parser.auc,
-                "auct": parser.auctitle, "mae": parser.mae, "maet": parser.maetitle, "heritstring": parser.heritstring,
-                "heritvalue": parser.heritvalue, "structstring": parser.structstring, "structvalue": parser.structvalue}
-    elif parser.mode == "demo2":
-        return {"dir": parser.dir, "settings": parser.settingsfile, "mode": parser.mode, "pos": parser.pos,
-                "post": parser.postitle, "error": parser.error, "errort": parser.errortitle, "extra": parser.extraplots,
-                "aucmin": parser.aucmin, "aucmax": parser.aucmax, "maemin": parser.maemin, "maemax": parser.maemax}
+
+
+def print_parameters(args_dict):
+    """
+    Prints out the arguments that were passed at run time. This function should only be called after checking for the
+    verbose option
+
+    :param args_dict: the arguments in a dictionary
+    """
+    print "\nVerbose Mode"
+    print "Input directory is specified as", args_dict["dir"]
+    if args_dict["settings"] is not None:
+        print "Settings file is specified as", args_dict["settings"]
+    print "Demonstrate mode is set to", args_dict["mode"]
+    if args_dict["mode"] == "demonstrate":
+        if args_dict["auc"]:
+            print "Including AUC plot"
+            print "AUC plot title specified as", args_dict["auctitle"]
+        else:
+            print "AUC plot not included"
+        if args_dict["mae"]:
+            print "Including MAE plot"
+            print "MAE plot title specified as", args_dict["maetitle"]
+        else:
+            print "MAE plot included"
+        print "Heritability strings specified as", args_dict["heritstring"]
+        print "Heritability values specified as", args_dict["heritvalue"]
+        print "Structure strings specified as", args_dict["structstring"]
+        print "Structure values specified as", args_dict["structvalue"]
+    elif args_dict["mode"] == "demonstrate2":
+        if args_dict["pos"]:
+            print "Including TP by FP plot"
+            print "TP by FP plot title specified as", args_dict["postitle"]
+        else:
+            print "TP by FP plot not included"
+        if args_dict["error"]:
+            print "Including Error plot"
+            print "Error plot title specified as", args_dict["errortitle"]
+        else:
+            print "Error plot not included"
+        if args_dict["extraplots"]:
+            print "Including extra plots"
+        print "AUC axis minimum specified as", args_dict["aucmin"]
+        print "AUC axis maximum specified as", args_dict["aucmax"]
+        print "MAE axis minimum specified as", args_dict["maemin"]
+        print "MAE axis maximum specified as", args_dict["maemax"]
 
 
 if __name__ == "__main__":
     initialize_graphics()
-    usage()
-    print check_args()
+    #usage()
+    check_args()
