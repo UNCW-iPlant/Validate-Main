@@ -18,11 +18,11 @@ class Demonstrate:
         Loads either Demonstrate or Demonstrate2 to the rpy2 global environment depending on the mode given at runtime.
 
         """
-        if self.args["mode"] == "demo":
+        if self.args["mode"] == "demonstrate":
             with open(os.getcwd()+"/DemoMPlot/R/Demonstrate.R") as f:
                 dem = f.read()
             robjects.r(dem)
-        elif self.args["mode"] == "demo2":
+        elif self.args["mode"] == "demonstrate2":
             with open(os.getcwd()+"/DemoMPlot/R/Demonstrate2.R") as g:
                 dem2 = g.read()
             robjects.r(dem2)
@@ -32,9 +32,9 @@ class Demonstrate:
         Performs the Demonstrate or Demonstrate2 function depending on the mode given at runtime.
 
         """
-        if self.args["mode"] == "demo":
+        if self.args["mode"] == "demonstrate":
             self.demonstrate_one()
-        elif self.args["mode"] == "demo2":
+        elif self.args["mode"] == "demonstrate2":
             self.demonstrate_two()
 
     def demonstrate_one(self):
@@ -46,10 +46,10 @@ class Demonstrate:
         parameters
         """
         r_dem = robjects.globalenv['Demonstrate']
-        self.args["auct"] = add_pdf_extension(self.args["auct"])
-        self.args["maet"] = add_pdf_extension(self.args["maet"])
-        r_dem(self.args["dir"], check_for_null(self.args["settings"]), self.args["auc"], self.args["auct"],
-              self.args["mae"], self.args["maet"]+".pdf", self.args["heritstring"], self.args["heritvalue"],
+        self.args["auctitle"] = add_pdf_extension(self.args["auctitle"])
+        self.args["maetitle"] = add_pdf_extension(self.args["maetitle"])
+        r_dem(self.args["dir"], check_for_null(self.args["settings"]), self.args["auc"], self.args["auctitle"],
+              self.args["mae"], self.args["maetitle"]+".pdf", self.args["heritstring"], self.args["heritvalue"],
               self.args["structstring"], self.args["structvalue"])
 
     def demonstrate_two(self):
@@ -61,11 +61,11 @@ class Demonstrate:
         parameters
         """
         r_dem2 = robjects.globalenv['Demonstrate2']
-        self.args["post"] = add_pdf_extension(self.args["post"])
+        self.args["postitle"] = add_pdf_extension(self.args["postitle"])
         print self.args["dir"]
-        r_dem2(self.args["dir"], check_for_null(self.args["settings"]), self.args["pos"], self.args["post"],
-               self.args["error"], self.args["errort"], self.args["extra"], self.args["aucmin"], self.args["aucmax"],
-               self.args["maemin"], self.args["maemax"])
+        r_dem2(self.args["dir"], check_for_null(self.args["settings"]), self.args["pos"], self.args["postitle"],
+               self.args["error"], self.args["errortitle"], self.args["extraplots"], self.args["aucmin"],
+               self.args["aucmax"], self.args["maemin"], self.args["maemax"])
 
 
 def check_for_null(entry):
