@@ -29,7 +29,7 @@ class Dem2Test(unittest.TestCase):
         for name in outputnames:
             if os.path.isfile(self.testdir + '/' + name):
                 os.remove(self.testdir + '/' + name)
-        r_dem2(self.testdir, "results.param")
+        r_dem2(self.testdir)
         for name in outputnames:
             self.assertTrue(os.path.isfile(self.testdir + '/' + name))
             self.assertTrue(os.path.getsize(self.testdir + '/' + name) > 0)

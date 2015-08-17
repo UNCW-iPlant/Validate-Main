@@ -17,7 +17,7 @@ class DemonstrateTest(unittest.TestCase):
         for each in outputs:
             if os.path.isfile(self.testdir + '/' + each):
                 os.remove(self.testdir + '/' + each)
-        r_dem(self.testdir, "results.param")
+        r_dem(self.testdir)
         for each in outputs:
             self.assertTrue(os.path.isfile(self.testdir + '/' + each))
             self.assertTrue(os.path.getsize(self.testdir + '/' + each) > 0)
