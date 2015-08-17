@@ -26,14 +26,19 @@
 #' demonstrate2 (dir="path")
 #' demonstrate2 (dir="path", settingsfile="results.param")
 
-Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.title="True Positives vs. False Positives.pdf",
+Demonstrate2<-function(dir, outputdir=NULL, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.title="True Positives vs. False Positives.pdf",
                        make.error.plot=TRUE, error.plot.title="Plot of AUC by MAE", extra.plots=TRUE, 
                        AUC.axis.min=0, AUC.axis.max=1.0, MAE.axis.min=0, MAE.axis.max=2.0){
   
   require(ggplot2)
   require(plyr)
   require(grid)
-  
+  setOutput <- function(title){
+    if (!is.null(outputdir)){
+      return(paste(outputdir, title, sep="/"))
+    }
+    return(title)
+  }
   readFiles <- function(dir) {
     setwd(dir)
     files <- Sys.glob("*.txt")
@@ -77,13 +82,13 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
   }
   #Create some extra plots for univariate visualization
   if (extra.plots){
-    pdf(file="TP Histograms.pdf")
+    pdf(file=setOutput("TP Histograms.pdf"))
     for (i in 1:length(myfiles)){
       hist(myfiles[[i]]$tp, main=paste(filenames[[i]]," True Positives",sep=":"), xlab="True Positives")
     }
     writeSettings()
     dev.off()
-    pdf(file="FP Histograms.pdf")
+    pdf(file=setOutput("FP Histograms.pdf"))
     for (i in 1:length(myfiles)){
       hist(myfiles[[i]]$fp, main=paste(filenames[[i]]," False Positives",sep=":"), xlab="False Positives")
     }
@@ -96,7 +101,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
     prec<-unlist(lapply(myfiles, function(x) mean(x$precision)))
     fitdat<-data.frame(sens,spec,prec, row.names=filenames)
     colnames(fitdat)<-c("Average Sensitivity","Average Specificity","Average Precision")
-    write.csv(fitdat, "ComparisonTable.csv")
+    write.csv(fitdat, setOutput("ComparisonTable.csv"))
   }
   
   #Create the plots for true and false positives
@@ -174,7 +179,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
     TPFP <- ddply(all.data, .(tp, fp, file), summarize, count=length(file))
     
     #Creates pdf output
-    pdf(file=pos.plot.title)
+    pdf(file=setOutput(pos.plot.title))
     
     #Creates plot of each file with rectangles from minimums to medians and medians 
     #to maximums of all true and false positives. Points in the green area represent 
@@ -222,7 +227,7 @@ Demonstrate2<-function(dir, settingsfile=NULL, make.pos.plot=TRUE, pos.plot.titl
     
     #Creates pdf output
     pdfname<-paste(error.plot.title,"pdf",sep=".")
-    pdf(file=pdfname)
+    pdf(file=setOutput(pdfname))
     
     p <- ggplot(MAE_AUC, aes(x=mae, y=auc, color=file), environment()) + geom_point(
       aes(size=count))

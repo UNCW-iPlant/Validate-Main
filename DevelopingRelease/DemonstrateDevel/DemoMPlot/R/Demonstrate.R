@@ -22,10 +22,16 @@
 #' @examples
 #' demonstrate (dir="path")
 
-Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Population Structure and Heritability.pdf",
+Demonstrate <- function(dir, outputdir=NULL, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.title="Mean AUC By Population Structure and Heritability.pdf",
                         make.MAE.plot=TRUE, MAE.plot.title="Mean MAE By Population Structure and Heritability.pdf",herit.strings=list("_03_","_04_","_06_")
                         ,herit.values=list(0.3,0.4,0.6),struct.strings=list("PheHasStruct","PheNPStruct"),struct.values=list(TRUE,FALSE)) {
 
+  setOutput <- function(title){
+    if (!is.null(outputdir)){
+      return(paste(outputdir, title, sep="/"))
+    }
+    return(title)
+  }
   writeSettings <- function(){
     if (!is.null(settingsfile)){
       setwd(dir)
@@ -92,7 +98,7 @@ Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.tit
   require(sciplot)
 
   if (make.AUC.plot) {
-    pdf(file=AUC.plot.title)
+    pdf(file=setOutput(AUC.plot.title))
     lineplot.CI(totalDataSet$Herit,totalDataSet$AUC,totalDataSet$Structure,main=AUC.plot.title,
                 xlab="Heritability",ylab="Mean AUC",trace.label="Pop. Structure")
     writeSettings()
@@ -100,7 +106,7 @@ Demonstrate <- function(dir, settingsfile=NULL, make.AUC.plot=TRUE, AUC.plot.tit
   }
 
   if (make.MAE.plot) {
-    pdf(file=MAE.plot.title)
+    pdf(file=setOutput(MAE.plot.title))
     lineplot.CI(totalDataSet$Herit,totalDataSet$MAE,totalDataSet$Structure,main=MAE.plot.title,
                 xlab="Heritability",ylab="Mean MAE",trace.label="Pop. Structure")
     writeSettings()
