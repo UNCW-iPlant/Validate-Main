@@ -49,7 +49,7 @@ class Demonstrate:
         self.args["auctitle"] = add_pdf_extension(self.args["auctitle"])
         self.args["maetitle"] = add_pdf_extension(self.args["maetitle"])
         r_dem(self.args["dir"], check_for_null(self.args["output"]), check_for_null(self.args["settings"]),
-              self.args["auc"], self.args["auctitle"], self.args["mae"], self.args["maetitle"] + ".pdf",
+              self.args["xauc"] is False, self.args["auctitle"], self.args["xmae"] is False, self.args["maetitle"] + ".pdf",
               self.args["heritstring"], self.args["heritvalue"], self.args["structstring"], self.args["structvalue"])
 
     def demonstrate_two(self):
@@ -63,7 +63,7 @@ class Demonstrate:
         r_dem2 = robjects.globalenv['Demonstrate2']
         self.args["postitle"] = add_pdf_extension(self.args["postitle"])
         r_dem2(self.args["dir"], check_for_null(self.args["output"]), check_for_null(self.args["settings"]),
-               self.args["pos"], self.args["postitle"],self.args["error"], self.args["errortitle"],
+               self.args["xpos"] is False, self.args["postitle"],self.args["xerror"] is False, self.args["errortitle"],
                self.args["extraplots"], self.args["aucmin"], self.args["aucmax"], self.args["maemin"],
                self.args["maemax"])
 

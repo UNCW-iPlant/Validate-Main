@@ -76,12 +76,12 @@ def add_demo_command_options(subparsers):
     :param subparsers: the main argument parsers group of subparsers
     """
     demo_parser = subparsers.add_parser('demonstrate', help="Generate the original Demonstrate graphics")
-    demo_parser.add_argument("-a", "--auc", action="store_false", default=True,
-                             help="To include the AUC plot")
+    demo_parser.add_argument("-a", "--xauc", action="store_true", default=False,
+                             help="To exclude the AUC plot")
     demo_parser.add_argument("-t", "--auctitle", type=str, default="Mean AUC By Population Structure and Heritability",
                              help="AUC plot title")
-    demo_parser.add_argument("-m", "--mae", action="store_false", default=True,
-                             help="To include the MAE plot")
+    demo_parser.add_argument("-m", "--xmae", action="store_true", default=False,
+                             help="To exclude the MAE plot")
     demo_parser.add_argument("-y", "--maetitle", type=str, default="Mean MAE By Population Structure and Heritability",
                              help="MAE plot title")
     demo_parser.add_argument("-r", "--heritstring", type=str, default=["_03_", "_04_", "_06_"],
@@ -101,11 +101,11 @@ def add_demo2_command_options(subparsers):
     :param subparsers: the main argument parsers group of subparsers
     """
     demo2_parser = subparsers.add_parser('demonstrate2', help="Generate the Demonstrate2 graphics")
-    demo2_parser.add_argument("-q", "--pos", action="store_false", default=True,
+    demo2_parser.add_argument("-q", "--xpos", action="store_true", default=False,
                         help="To include the TP by FP plot")
     demo2_parser.add_argument("-i", "--postitle", type=str, default="True Positives by False Positives",
                         help="TP by FP plot title")
-    demo2_parser.add_argument("-e", "--error", action="store_false", default=True,
+    demo2_parser.add_argument("-e", "--xerror", action="store_true", default=False,
                         help="To include the error plot")
     demo2_parser.add_argument("-w", "--errortitle", type=str, default="Plot of AUC by MAE",
                         help="The error plot title")
@@ -138,12 +138,12 @@ def print_parameters(args_dict):
         print "Settings file is specified as", args_dict["settings"]
     print "Demonstrate mode is set to", args_dict["mode"]
     if args_dict["mode"] == "demonstrate":
-        if args_dict["auc"]:
+        if not args_dict["xauc"]:
             print "Including AUC plot"
             print "AUC plot title specified as", args_dict["auctitle"]
         else:
             print "AUC plot not included"
-        if args_dict["mae"]:
+        if not args_dict["xmae"]:
             print "Including MAE plot"
             print "MAE plot title specified as", args_dict["maetitle"]
         else:
@@ -153,12 +153,12 @@ def print_parameters(args_dict):
         print "Structure strings specified as", args_dict["structstring"]
         print "Structure values specified as", args_dict["structvalue"]
     elif args_dict["mode"] == "demonstrate2":
-        if args_dict["pos"]:
+        if not args_dict["xpos"]:
             print "Including TP by FP plot"
             print "TP by FP plot title specified as", args_dict["postitle"]
         else:
             print "TP by FP plot not included"
-        if args_dict["error"]:
+        if not args_dict["xerror"]:
             print "Including Error plot"
             print "Error plot title specified as", args_dict["errortitle"]
         else:
