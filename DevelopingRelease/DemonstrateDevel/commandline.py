@@ -22,6 +22,7 @@ def usage():
     print "--help or -h to see the help menu"
     print "--verbose or -v for verbose mode"
     print "--dir or -d to specify the directory containing the input files (required)"
+    print "--output or -o to specify the output directory, uses the input directory by default"
     print "--settingsfile or -s to specify the settings file from Winnow"
     print "--mode or -o to specify either Demonstrate or Demonstrate2 (required)"
     print "Demonstrate Arguments"
@@ -56,6 +57,7 @@ def check_args():
     parser = argparse.ArgumentParser(description="Demonstrate command-line arguments")
     parser.add_argument("-v", "--verbose", help="Trigger verbose mode", action="store_true", default=False)
     parser.add_argument("-d", "--dir", required=True, type=str, help="The input folder")
+    parser.add_argument("-o", "--output", required=False, type=str, help="The output folder")
     parser.add_argument("-s", "--settings", type=str, help="The .param file from winnow", default=None)
     subparsers = parser.add_subparsers(help="Program mode (e.g. run demonstrate or demonstrate2)",
                                        dest="mode")
@@ -128,6 +130,10 @@ def print_parameters(args_dict):
     """
     print "\nVerbose Mode"
     print "Input directory is specified as", args_dict["dir"]
+    if args_dict["output"] is not None:
+        print "The output directory is specified as", args_dict["output"]
+    else:
+        print "The output directory is specified as", args_dict["dir"]
     if args_dict["settings"] is not None:
         print "Settings file is specified as", args_dict["settings"]
     print "Demonstrate mode is set to", args_dict["mode"]
