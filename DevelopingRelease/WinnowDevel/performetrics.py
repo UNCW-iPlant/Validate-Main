@@ -68,8 +68,11 @@ def mattcorr(snpTrueFalse, threshold, scoreColumn):
         falsePositives = float(fp(snpTrueFalse, threshold, scoreColumn))
         trueNegatives = float(tn(snpTrueFalse, threshold, scoreColumn))
         falseNegatives = float(fn(snpTrueFalse, threshold, scoreColumn)) 
-        denom = np.sqrt((truePositives+falsePositives)*(truePositives+falseNegatives)*(falsePositives+trueNegatives)*(trueNegatives+falseNegatives))
-        return (truePositives*trueNegatives - falsePositives*falseNegatives) / denom
+        if (truePositives == 0) and (falsePositives == 0):
+            return "undefined"
+        else:
+            denom = np.sqrt((truePositives+falsePositives)*(truePositives+falseNegatives)*(falsePositives+trueNegatives)*(trueNegatives+falseNegatives))
+            return (truePositives*trueNegatives - falsePositives*falseNegatives) / denom
 
 def auc(snpTrueFalse, scoreColumn):
 	"""
@@ -381,7 +384,10 @@ def precision(snpTrueFalse, threshold, scoreColumn):
 	"""
 	truePositives = float(tp(snpTrueFalse, threshold, scoreColumn))
 	falsePositives = float(fp(snpTrueFalse, threshold, scoreColumn))
-	return truePositives / (truePositives + falsePositives)
+	if (truePositives == 0) and (falsePositives == 0):
+	    return "undefined"
+	else:
+	    return truePositives / (truePositives + falsePositives)
 	
 def fdr(snpTrueFalse, threshold, scoreColumn):
         """
@@ -403,8 +409,10 @@ def fdr(snpTrueFalse, threshold, scoreColumn):
         """
         truePositives = float(tp(snpTrueFalse, threshold, scoreColumn))
 	falsePositives = float(fp(snpTrueFalse, threshold, scoreColumn))
-	return falsePositives / (truePositives + falsePositives)
-        
+	if (truePositives == 0) and (falsePositives == 0):
+	    return "undefined"
+	else:
+	    return falsePositives / (truePositives + falsePositives)
 
 def youden(snpTrueFalse, threshold, scoreColumn):
 	"""
@@ -426,6 +434,21 @@ def youden(snpTrueFalse, threshold, scoreColumn):
 	sensitivity = float(sens(snpTrueFalse, threshold, scoreColumn))
 	specificity = float(spec(snpTrueFalse, threshold, scoreColumn))
 	return sensitivity + specificity - 1.0
+
+def avgcovarweight(covar):
+    """
+    Returns the average weight of covariates, if applicable, for the model
+    
+            Example:
+                
+                    >>>covar=[0.0841,0.00161,0.252,0.00161,0.24,0.25,0.00161,0.25,0.00161,0.252,0.25,0.00161,-0.0244]
+                    >>>avgcovarweight(covar)
+                    0.12013461538461537
+                    
+    :param covar: List of covariate weights from data set
+    :return: the average covariate weight calculated from the list
+    """
+    return np.mean(np.array(covar))
 
 if __name__ == "__main__":
     import doctest

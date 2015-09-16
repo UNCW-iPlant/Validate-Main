@@ -7,9 +7,8 @@
 from commandline import initializeGraphics, checkArgs
 from fileimport import getList, loadKT, loadFile, trueFalse, writeCSV, writeSettings
 from checkhidden import checkList
-from gwas import gwasWithBeta, gwasWithoutBeta
-from adjustments import fdr_bh
-
+from gwas import gwasWithBeta, gwasWithoutBeta, gwasBetaCovar, gwasNoBetaCovar 
+from statsmodels.sandbox.stats.multicomp import multipletests
 
 class Winnow:
     def __init__(self, args):
@@ -86,8 +85,14 @@ class Winnow:
         self.save_snp_score(snp_column, score_column, adjusted_score_column)
         if self.args_dict['beta'] is not None:
             beta_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['beta']), True)
+            if self.args_dict['covar'] is not None:
+                covar_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['covar']), True)
+                return adjusted_score_column, beta_column, covar_column
             return adjusted_score_column, beta_column
         else:
+            if self.args_dict['covar'] is not None:
+                covar_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['covar']), True)
+                return adjusted_score_column, covar_column
             return adjusted_score_column
 
     def do_analysis(self):
@@ -101,12 +106,17 @@ class Winnow:
         app_output_list = sorted(checkList(getList(self.args_dict['folder'])))
         for each in app_output_list:
             if self.args_dict['beta'] is not None:
+                if self.args_dict['covar'] is not None:
+                    score_column, beta_column, covar_column = self.load_data(each)
                 score_column, beta_column = self.load_data(each)
             else:
                 score_column = self.load_data(each)
                 beta_column = None
             if self.args_dict['analysis'] == 'GWAS':
-                yield self.do_gwas(score_column, beta_column)
+                if self.args_dict['covar'] is not None:
+                    yield self.do_gwas(score_column, beta_column, covar_column)
+                else:
+                    yield self.do_gwas(score_column, beta_column)
             else:
                 # Add other analysis methods here
                 print 'Currently, only GWAS is supported.'
@@ -127,7 +137,7 @@ class Winnow:
                 first_for_header = False
         gen.close()
 
-    def do_gwas(self, score_column, beta_column):
+    def do_gwas(self, score_column, beta_column, covar_column):
         """
         Returns the results of the GWAS analysis, with or without beta, using the instance variables snp_true_false and
         beta_true_false and the lists, from the parameters, the lists of scores and, if applicable, the list of betas.
@@ -138,9 +148,15 @@ class Winnow:
         """
         threshold = self.args_dict['threshold']
         if self.args_dict['beta'] is None:
-            return gwasWithoutBeta(self.snp_true_false, score_column, threshold)
+            if self.args_dict['covar'] is not None:
+                return gwasNoBetaCovar(self.snp_true_false, score_column, threshold, covar_column)
+            else:
+                return gwasWithoutBeta(self.snp_true_false, score_column, threshold)
         else:
-            return gwasWithBeta(beta_column, self.beta_true_false, self.snp_true_false, score_column, threshold)
+            if self.args_dict['covar'] is not None:
+                return gwasBetaCovar(beta_column, self.beta_true_false, self.snp_true_false, score_column, threshold, covar_column)
+            else:
+                return gwasWithBeta(beta_column, self.beta_true_false, self.snp_true_false, score_column, threshold)
 
     def adjust_score(self, score):
         """
@@ -152,7 +168,7 @@ class Winnow:
         if self.args_dict['pvaladjust'] is None:
             return score
         elif self.args_dict['pvaladjust'] == 'BH':
-            return fdr_bh(score)
+            return multipletests(score, alpha=self.args_dict['threshold'], method="fdr_bh")
         # Add other adjustments here
         else:
             return score

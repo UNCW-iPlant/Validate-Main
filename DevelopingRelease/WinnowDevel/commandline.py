@@ -72,6 +72,7 @@ def checkArgs():
                         help="Specify the type of p-value adjustment")
     parser.add_argument("-o", "--savep", default=False, action="store_true",
                         help="Saves P-values in a text file if specified")
+    parser.add_argument("-c", "--covar", default=None, type=str, help="A covariate file for your datasets, if necessary.")
     args = parser.parse_args()
 
     """Change command line arguments into variables to pass along to the rest of the program"""
@@ -89,6 +90,7 @@ def checkArgs():
     kttypeseper = args.kttypeseper
     severity = args.severity
     pvaladjust = args.pvaladjust
+    covar = args.covar
     savep = args.savep
     if verbose:
         print "\nVerbose mode"
@@ -105,17 +107,17 @@ def checkArgs():
         print "Known-truth delimiter is set as", kttypeseper
         print "Severity ratio is specified at", severity
         print "P-value adjustment is set as", pvaladjust
+        print "Covariate file specified as", covar
         if savep:
-            print "Saving p-values"
+            print "Saving p-values..."
 
     if pvaladjust not in ["BH"] and pvaladjust is not None:
         print 'Currently only BH (Benjamini-Hochberg) is supported, the original P-values will be used'
 
     return folder, analysis, truth, snp, score, beta, filename, \
-           threshold, seper, kttype, kttypeseper, severity, pvaladjust, savep
+           threshold, seper, kttype, kttypeseper, severity, pvaladjust, savep, covar
 
 
 if __name__ == "__main__":
     import doctest
-
     doctest.testmod()
