@@ -68,11 +68,24 @@ def checkArgs():
                         help="Specify delimitation in known-truth file")
     parser.add_argument("-y", "--severity", type=float, default=None, nargs='?',
                         help="Severity ratio used in the h-measure calculation (currently not available, can leave blank)")
-    parser.add_argument("-p", "--pvaladjust", default=None, nargs='?', choices=["BH"],
-                        help="Specify the type of p-value adjustment")
+    adjust_methods=["bonferroni", "sidak", "holm-sidak", "holm", "simes-hochberg", "hommel", "fdr_bh","fdr_by","fdr_tsbh","fdr_tsbky"]
+    parser.add_argument("-p", "--pvaladjust", default=None, nargs='?', choices=adjust_methods, help="Specify the type of p-value adjustment (not case sensitive)")
+    """
+            Explanation of p-value adjustment methods:
+                -bonferroni: one-step Bonferroni method
+                -sidak: one-step Sidak method
+                -holm-sidak: step down method using Sidak adjustments
+                -holm: step down method using Bonferroni adjustments
+                -simes-hochberg: step down method (for independent statistics)
+                -hommel: closed method based on Simes procedure (non-negatively associated statistics only)
+                -fdr_bh: Benjamini-Hochberg method for false discovery rate control (non-negatively associated or independent statistics only)
+                -fdr_by: Benjamini-Yekutieli method for false discovery rate control
+                -fdr_tsbh: Two-stage FDR control (non-negatively associated or independent statistics only) 
+                -fdr_tsbky: Two-stage FDR control
+        
+    """
     parser.add_argument("-o", "--savep", default=False, action="store_true",
                         help="Saves P-values in a text file if specified")
-    parser.add_argument("-c", "--covar", default=None, type=str, help="A covariate file for your datasets, if necessary.")
     args = parser.parse_args()
 
     """Change command line arguments into variables to pass along to the rest of the program"""
@@ -89,9 +102,13 @@ def checkArgs():
     kttype = args.kttype
     kttypeseper = args.kttypeseper
     severity = args.severity
-    pvaladjust = args.pvaladjust
-    covar = args.covar
+    pvaladjust = args.pvaladjust.lower()
     savep = args.savep
+    
+    if pvaladjust not in adjust_methods and pvaladjust is not None:
+        print 'P-value adjustment method given is not supported. The original p-values will be used instead.'
+        pvaladjust=None
+    
     if verbose:
         print "\nVerbose mode"
         print "Analysis method for being validated is specified as", analysis
@@ -107,15 +124,11 @@ def checkArgs():
         print "Known-truth delimiter is set as", kttypeseper
         print "Severity ratio is specified at", severity
         print "P-value adjustment is set as", pvaladjust
-        print "Covariate file specified as", covar
         if savep:
             print "Saving p-values..."
 
-    if pvaladjust not in ["BH"] and pvaladjust is not None:
-        print 'Currently only BH (Benjamini-Hochberg) is supported, the original P-values will be used'
-
     return folder, analysis, truth, snp, score, beta, filename, \
-           threshold, seper, kttype, kttypeseper, severity, pvaladjust, savep, covar
+           threshold, seper, kttype, kttypeseper, severity, pvaladjust, savep
 
 
 if __name__ == "__main__":

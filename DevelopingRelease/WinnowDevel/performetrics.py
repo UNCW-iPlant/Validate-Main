@@ -119,6 +119,7 @@ def tp(snpTrueFalse, threshold, scoreColumn):
 	"""
 	testColumn = list()
 	for each in scoreColumn:
+	        print each
 		if float(each) < threshold:
 			testColumn.append(True)
 		else:
@@ -434,21 +435,6 @@ def youden(snpTrueFalse, threshold, scoreColumn):
 	sensitivity = float(sens(snpTrueFalse, threshold, scoreColumn))
 	specificity = float(spec(snpTrueFalse, threshold, scoreColumn))
 	return sensitivity + specificity - 1.0
-
-def avgcovarweight(covar):
-    """
-    Returns the average weight of covariates, if applicable, for the model
-    
-            Example:
-                
-                    >>>covar=[0.0841,0.00161,0.252,0.00161,0.24,0.25,0.00161,0.25,0.00161,0.252,0.25,0.00161,-0.0244]
-                    >>>avgcovarweight(covar)
-                    0.12013461538461537
-                    
-    :param covar: List of covariate weights from data set
-    :return: the average covariate weight calculated from the list
-    """
-    return np.mean(np.array(covar))
 
 if __name__ == "__main__":
     import doctest
