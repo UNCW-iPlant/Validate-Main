@@ -21,28 +21,6 @@ def initializeGraphics():
     print "###################################################################"
 
 
-def usage():
-    """Prints all possible command-line arguments to the screen; also ends the execution of the software"""
-
-    print "\n\n\n"
-    print "Command-line usage help menu.\n"
-    print "--verbose or -v for verbose mode"
-    print "--analysis or -a to specify either 'GWAS' or 'prediction' (if blank, Winnow assumes GWAS)"
-    print "--Folder or -F to input folder of box results (required)"
-    print "--Class or -C to specify the known-truth file for used simulation (required)"
-    print "--Snp or -S to specify a string for the name of the SNP column in results file (required)"
-    print "--Score or -P to specify a string for the name of the scoring column in results file (e.g., p-value; required)"
-    print "--beta or -b to specify a string for the name of the estimated SNP effect column in results file"
-    print "--filename or -f to specify the desired filename for the Winnow output file"
-    print "--threshold ir -t to specify a desired threshold for classification performetrics where necessary"
-    print "--seper or -s to specify either whitespace or comma"
-    print "--kttype or -k to specify the type of known-truth file for --class (either OTE or FGS)"
-    print "--kttypeseper or -r to specify delimination in known-truth file"
-    print "--pvaladjust or -p to specify the type of P-value adjustment"
-    print "--savep or -o to save P-values"
-    print "--help or -h to see help menu\n\n"
-
-
 def checkArgs():
     """Checks for arguments at beginning of the execution of the main function"""
     parser = argparse.ArgumentParser(description="Winnow command line arguments")
@@ -63,7 +41,7 @@ def checkArgs():
     parser.add_argument("-s", "--seper", type=str, choices=["comma", "whitespace", "tab"], default="whitespace",
                         help="Delimiter for box results")
     parser.add_argument("-k", "--kttype", type=str, required=True, choices=["OTE", "FGS"], default="OTE",
-                        help="The type of known-truth file for --Class")
+                        help="The type of known-truth file for --Class. OTE is only truth and effect, and FGS is full genome set")
     parser.add_argument("-r", "--kttypeseper", choices=["comma", "whitespace", "tab"], nargs='?', default="whitespace",
                         help="Specify delimitation in known-truth file")
     parser.add_argument("-y", "--severity", type=float, default=None, nargs='?',
@@ -82,8 +60,11 @@ def checkArgs():
                 -fdr_by: Benjamini-Yekutieli method for false discovery rate control
                 -fdr_tsbh: Two-stage FDR control (non-negatively associated or independent statistics only) 
                 -fdr_tsbky: Two-stage FDR control
-        
+            
+            P-value adjustment algorithms are those created by Holm (1979), Hochberg (1988), 
+            Hommel (1988), Benjamini & Hochberg (1995), and Benjamini & Yekutieli (2001).
     """
+    parser.add_argument("-c", "--covar", default=None, help="The name of the covariate column from results file")
     parser.add_argument("-o", "--savep", default=False, action="store_true",
                         help="Saves P-values in a text file if specified")
     args = parser.parse_args()
@@ -103,6 +84,7 @@ def checkArgs():
     kttypeseper = args.kttypeseper
     severity = args.severity
     pvaladjust = args.pvaladjust.lower()
+    covar = args.covar
     savep = args.savep
     
     if pvaladjust not in adjust_methods and pvaladjust is not None:
@@ -115,7 +97,7 @@ def checkArgs():
         print "Folder of results files for validation is located in", folder
         print "Truth file is", truth
         print "SNP column name in results files is specified as", snp
-        print "Scoring Column name (e.g. p-vale column) in results files is specified as", score
+        print "Scoring Column name (e.g. p-value column) in results files is specified as", score
         print "Estimated SNP weight column name (e.g. regression betas) in results files is specified as", beta
         print "Filename specified as", filename
         print "Threshold is set at", threshold
@@ -124,11 +106,12 @@ def checkArgs():
         print "Known-truth delimiter is set as", kttypeseper
         print "Severity ratio is specified at", severity
         print "P-value adjustment is set as", pvaladjust
+        print "Covariate column is specified as", covar
         if savep:
             print "Saving p-values..."
 
     return folder, analysis, truth, snp, score, beta, filename, \
-           threshold, seper, kttype, kttypeseper, severity, pvaladjust, savep
+           threshold, seper, kttype, kttypeseper, severity, pvaladjust, covar, savep
 
 
 if __name__ == "__main__":
