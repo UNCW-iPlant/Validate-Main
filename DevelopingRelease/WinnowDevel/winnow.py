@@ -94,7 +94,11 @@ class Winnow:
             else:
                 return adjusted_score_column, beta_column
         else:
-            return adjusted_score_column
+            if self.args_dict['covar'] is not None:
+                covar_column = data_to_list(acquired_data, 1, acquired_data.header.index(self.args_dict['covar']), True)
+                return adjusted_score_column, covar_column
+            else:
+                return adjusted_score_column
 
 
     def do_analysis(self):
@@ -114,11 +118,15 @@ class Winnow:
                     score_column, beta_column = self.load_data(each)
                     covar_column = None
             else:
-                score_column = self.load_data(each)
-                beta_column = None
-                covar_column = None
+                if self.args_dict['covar'] is not None:
+                    score_column, covar_column = self.load_data(each)
+                    beta_column = None
+                else:
+                    score_column = self.load_data(each)
+                    beta_column = None
+                    covar_column = None
             if self.args_dict['analysis'] == 'GWAS':
-                yield self.do_gwas(score_column=score_column, beta_column=beta_column, covar_column=covar_column)
+                yield self.do_gwas(score_column, beta_column, covar_column)
             else:
                 # Add other analysis methods here
                 print 'Currently, only GWAS is supported.'
@@ -173,7 +181,6 @@ class Winnow:
             return score
         else:
             return multipletests(score, alpha=self.args_dict['threshold'], method=self.args_dict['pvaladjust'])[1]
-        # Add other adjustments here
 
     def save_snp_score(self, snp, score, adjusted):
         """

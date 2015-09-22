@@ -448,7 +448,7 @@ def avgcovarweight(covar_column):
         :param covar_column: covariate column from data set
         :return: float representation of average covariate weight                
         """
-        return(np.mean(covar_column))
+        return np.mean(np.array(covar_column))
 
 if __name__ == "__main__":
     import doctest
