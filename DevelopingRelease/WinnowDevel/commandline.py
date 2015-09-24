@@ -83,7 +83,10 @@ def checkArgs():
     kttype = args.kttype
     kttypeseper = args.kttypeseper
     severity = args.severity
-    pvaladjust = args.pvaladjust.lower()
+    if args.pvaladjust==None:
+        pvaladjust = None
+    else:
+        pvaladjust = args.pvaladjust.lower()
     covar = args.covar
     savep = args.savep
     

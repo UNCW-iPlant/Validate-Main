@@ -7,7 +7,7 @@ from performetrics import *
 
 def gwasWithBeta(betaColumn, betaTrueFalse, snpTrueFalse, scoreColumn, threshold):
     """
-    Performs GWAS analysis with Beta
+    Performs GWAS analysis with beta/effect size
 
     :param betaColumn: collected positions
     :param betaTrueFalse: known of the collected positions
@@ -31,7 +31,7 @@ def gwasWithBeta(betaColumn, betaTrueFalse, snpTrueFalse, scoreColumn, threshold
             
 def gwasBetaCovar(betaColumn, betaTrueFalse, snpTrueFalse, scoreColumn, threshold, covar):
     """
-    Performs GWAS analysis with Beta
+    Performs GWAS analysis with beta/effect size and covariates
 
     :param betaColumn: collected positions
     :param betaTrueFalse: known of the collected positions
@@ -57,7 +57,7 @@ def gwasBetaCovar(betaColumn, betaTrueFalse, snpTrueFalse, scoreColumn, threshol
 
 def gwasWithoutBeta(snpTrueFalse, scoreColumn, threshold):
     """
-    Performs GWAS analysis without Beta
+    Performs GWAS analysis without beta/effect size
 
     :param snpTrueFalse: true/false data set
     :param scoreColumn: score data set
@@ -84,7 +84,7 @@ def gwasWithoutBeta(snpTrueFalse, scoreColumn, threshold):
                
 def gwasNoBetaCovar(snpTrueFalse, scoreColumn, threshold, covar):
     """
-    Performs GWAS analysis without Beta
+    Performs GWAS analysis without beta/effect size but with covariates
 
     :param snpTrueFalse: true/false data set
     :param scoreColumn: score data set

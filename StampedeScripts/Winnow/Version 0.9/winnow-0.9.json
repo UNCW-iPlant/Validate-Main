@@ -13,10 +13,10 @@
   "executionSystem": "stampede-07282014-1215-spt6655",
   "executionType": "HPC",
   "parallelism": "SERIAL",
-  "deploymentPath": "spt6655/applications/winnow-0.9",
+  "deploymentPath": "spt6655/applications/Validate_Workflow-0.9/winnow-0.9",
   "deploymentSystem": "data.iplantcollaborative.org",
-  "templatePath": "wrapper.sh",
-  "testPath": "test.sh",
+  "templatePath": "wrapper09.sh",
+  "testPath": "test09.sh",
   "checkpointable": true,
   "tags": [
     "python",
@@ -190,13 +190,13 @@
       },
 	"semantics": {
 		"maxCardinality": 1,
-        "minCardinality": 0,
+        "minCardinality": 1,
         "ontology": [
           "xs:bool"
         ]
 	},
       "value": {
-		"default": 0,
+		"default": 1,
         "type": "number",
         "order": 0,
         "required": false,
@@ -262,7 +262,6 @@
         ],
         "type": "enumeration",
         "visible": true,
-		"validator": null,
         "order": 0,
         "required": false
       }
@@ -286,7 +285,7 @@
         "order": 0,
         "required": false
       }
-    }
+    },
 	{
       "id": "Pvaladjust",
       "details": {
@@ -307,42 +306,42 @@
                 "None": "P-values from GWAS output will remain as is"
             },
             {
-                "Bonferroni": "One-step Bonferroni adjustment"
-            }
+                "bonferroni": "One-step Bonferroni adjustment"
+            },
 			{
-				"Sidak": "One step Sidak adjustment"
+				"sidak": "One step Sidak adjustment"
 			},
 			{
-				"Holm-Sidak": "Step down method with Sidak adjustments"
+				"holm-sidak": "Step down method with Sidak adjustments"
 			},
 			{
-				"Holm": "Step down method with Bonferroni adjustments"
+				"holm": "Step down method with Bonferroni adjustments"
 			},
 			{
-				"Simes-Hochberg": "Step up method (for independent statistics)"
+				"simes-hochberg": "Step up method (for independent statistics)"
 			},
 			{
-				"Hommel": "Closed method based on Simes tests (non-negatively associated statistics only)"
+				"hommel": "Closed method based on Simes tests (non-negatively associated statistics only)"
 			},
 			{
-				"FDR_BH": "Benjamini-Hochberg method for false discovery rate control (non-negatively associated or independent statistics only)"
+				"fdr_bh": "Benjamini-Hochberg method for false discovery rate control (non-negatively associated or independent statistics only)"
 			},
 			{
-				"FDR_BY": "Benjamini-Yekutieli method for false discovery rate control"
+				"fdr_by": "Benjamini-Yekutieli method for false discovery rate control"
 			},
 			{
-				"FDR_TSBH": "Two-stage FDR control (non-negatively associated or independent statistics only)"
+				"fdr_tsbh": "Two-stage FDR control (non-negatively associated or independent statistics only)"
 			},
 			{
-				"FDR_TSBY": "Two-stage FDR control"
-			},
+				"fdr_tsby": "Two-stage FDR control"
+			}
         ],
-        "type": "string",
+        "type": "enumeration",
         "visible": true,
         "order": 0,
         "required": false
       }
-    }
+    },
 	{
       "id": "covar",
       "details": {
@@ -362,7 +361,7 @@
         "order": 0,
         "required": false
       }
-    }
+    },
 	{
       "id": "save-p",
       "details": {
