@@ -8,17 +8,26 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
   readFiles <- function(dir) {
     setwd(dir)
     files <- Sys.glob("*.txt")
-    listOfFiles <- lapply(files, function(x) read.table(x, header=TRUE))
+    listOfFiles <- lapply(files, function(x) read.table(x, sep="\t",header=TRUE))
     return(listOfFiles)
   }
-  filenames <- unlist(tools::file_path_sans_ext(Sys.glob("*.txt")))
   myfiles<-readFiles(dir)
+  filenames <- unlist(tools::file_path_sans_ext(Sys.glob("*.txt")))
   print(filenames)
   
+  replace.vals<-function(data.list){
+    if (is.element("undefined", data.list)){
+      data.list<-replace(data.list, which(data.list=="undefined"), NA)
+      return(mean(data.list))
+    }
+    else { return(mean(data)) }
+  }
   #Create some extra plots for univariate visualization
   if (extra.plots){
     pdf(file="TP Histograms.pdf")
     for (i in 1:length(myfiles)){
+      mode(myfiles[[i]]$TruePositives)
+      print(myfiles[[i]]$TruePositives)
       hist(myfiles[[i]]$TruePositives, main=paste(filenames[[i]]," True Positives",sep=":"), xlab="True Positives")
     }
     dev.off()
@@ -27,11 +36,16 @@ Demonstrate2<-function(dir, make.pos.plot=TRUE, pos.plot.title="True Positives b
       hist(myfiles[[i]]$FalsePositives, main=paste(filenames[[i]]," False Positives",sep=":"), xlab="False Positives")
     }
     dev.off()
+    for (i in 1:length(myfiles)){
+      replace.vals(myfiles[[i]]$mattcorr)
+      replace.vals(myfiles[[i]]$precision)
+      replace.vals(myfiles[[i]]$fdr)
+    }
     #Make a quick summary table comparing PPV/Precision, sensivity, and specificity
     #and output said table to a CSV file
     sens<-unlist(lapply(myfiles, function(x) mean(x$sens)))
     spec<-unlist(lapply(myfiles, function(x) mean(x$spec)))
-    prec<-unlist(lapply(myfiles, function(x) mean(x$precision)))
+    prec<-unlist(lapply(myfiles, function(x) mean(x$precision, na.rm=T)))
     fitdat<-data.frame(sens,spec,prec, row.names=filenames)
     colnames(fitdat)<-c("Average Sensitivity","Average Specificity","Average Precision")
     write.csv(fitdat, "ComparisonTable.csv")
