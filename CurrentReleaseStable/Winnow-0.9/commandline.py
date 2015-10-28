@@ -23,6 +23,7 @@ def initializeGraphics():
 
 def checkArgs():
     """Checks for arguments at beginning of the execution of the main function"""
+    """Severity currently not implemented, disregard input types "y" and "--severity" """
     parser = argparse.ArgumentParser(description="Winnow command line arguments")
     parser.add_argument("-v", "--verbose", help="Trigger verbose mode", action="store_true")
     parser.add_argument("-a", "--analysis", nargs='?',
@@ -70,6 +71,7 @@ def checkArgs():
     args = parser.parse_args()
 
     """Change command line arguments into variables to pass along to the rest of the program"""
+    """Severity currently not implemented, disregard input types "y" and "--severity" """
     verbose = args.verbose
     folder = args.Folder
     analysis = args.analysis
