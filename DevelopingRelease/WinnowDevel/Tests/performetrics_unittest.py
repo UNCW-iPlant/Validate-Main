@@ -22,7 +22,7 @@ class PerformetricsTest(unittest.TestCase):
         beta_col = [1, 2, 3, 4, 5, 6]
         beta_tf = [1, 0, 1, 1, 0, 0]
         expected = 13.0
-        try:
+        try: 
             self.assertEqual(performetrics.rmse(beta_col, beta_tf), expected)
         except AssertionError:
             print "Assertion Error. performetrics.rmse current value of " + str(performetrics.rmse(beta_col,beta_tf))\
